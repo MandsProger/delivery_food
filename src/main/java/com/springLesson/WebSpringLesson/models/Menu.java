@@ -10,17 +10,17 @@ public class Menu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int food_id;
+    private long food_id;
 
     private int price, remainder;
 
     private String name, category, description, volume;
 
-    public int getFood_id() {
+    public long getFood_id() {
         return food_id;
     }
 
-    public void setFood_id(int food_id) {
+    public void setFood_id(long food_id) {
         this.food_id = food_id;
     }
 
