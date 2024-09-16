@@ -6,11 +6,9 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.security.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,16 +30,14 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "number_phone"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
-    private Date date_of_registration;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime date_of_registration;
 
 
     @PrePersist
     private void init() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        // date_of_registration = currentDateTime.format(formatter);
-
-
+       this.date_of_registration = LocalDateTime.now();
     }
 
     @Override

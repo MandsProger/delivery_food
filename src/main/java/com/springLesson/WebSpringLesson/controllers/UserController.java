@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static org.apache.coyote.http11.Constants.a;
+import java.time.LocalDateTime;
+import java.time.Period;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,14 +42,7 @@ public class UserController {
             model.addAttribute("errorMessage", "Пользователь с email: " + user.getEmail() + " уже сущетсвует");
             return "registration";
         }
-        User user1 = new User();
-        user1.setNumber_phone(Long.valueOf(cleanPhone));
-        user1.setName(name);
-        user1.setEmail(email);
-        user1.setPassword(password);
-        user1.setGender(gender);
-
-        userRepository.save(user1);
+        userRepository.save(user);
 
         return "redirect:/login";
     }
