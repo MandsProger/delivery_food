@@ -13,7 +13,9 @@
                             <li><a href="/" class="text-white">Главная</a></li>
                             <li><a href="/menu" class="text-white">Меню</a></li>
                             <li><a href="/about" class="text-white">О нас</a></li>
-                            <li><a href="/menu/add" class="text-white">Добавить блюдо в меню</a></li>
+                            <#if user.isAdmin()>
+                                <li><a href="/menu/add" class="text-white">Добавить блюдо в меню</a></li>
+                            </#if>
                             <br><li><a href="/login" class="text-white">Войти</a></li>
                             <li><a href="/registration" class="text-white">Зарегестрироваться</a></li>
                         </ul>
