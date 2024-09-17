@@ -20,25 +20,26 @@
             <th>Бан: </th>
         </tr>
 
-        <#list users as user>
-        <tr>
-            <th>${user.number_phone}</th>
-            <th>${user.name}</th>
-            <th>${user.email}</th>
-            <th>${user.gender}</th>
-            <th><#list user.roles as role>${role}</#list></th>
-            <th><#if user.active>true<#else>false</#if></th>
-            <th><a href="/admin/user/edit/${user.number_phone}">Редактировать</a></th>
+        <tr th:each="user : ${users}" class="tr">
+            <td th:text="${user.number_phone}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.gender}"></td>
+            <th th:each="role : ${user.roles}" th:text="${role}">Role</th>
+            <th th:text="${user.active ? 'true' : 'false'}">Active Status</th>
             <th>
-                <form action="/admin/user/ban/${user.number_phone}">
-
+            <a th:href="'/admin/user/edit/'+${user.email}">Редактировать</a>
+            </th>
+            <th>
+                <form action="@{/admin/user/ban/{email}(email=${user.email})}" method="post">
+                    <input type="hidden" name="_csrf" value="${_csrf.token}">
                     <input type="submit" value="Бан">
                 </form>
             </th>
         </tr>
-        <#else>
-        <h3>Пользователей нет</h3>
-    </#list>
+        <tr th:if="${#lists.isEmpty(users)}">
+            <td colspan="5"><h3>Пользователей нет</h3></td>
+        </tr>
     </table>
 </main>
 <div th:insert="~{blocks/footer :: footer}"></div>

@@ -1,4 +1,4 @@
-<div th:fragment="header">
+<div th:fragment="header" xmlns:th="http://www.thymeleaf.org">
     <header data-bs-theme="dark">
         <div class="text-bg-dark collapse show" id="navbarHeader" style="">
             <div class="container">
@@ -13,9 +13,7 @@
                             <li><a href="/" class="text-white">Главная</a></li>
                             <li><a href="/menu" class="text-white">Меню</a></li>
                             <li><a href="/about" class="text-white">О нас</a></li>
-                            <#if user.isAdmin()>
-                                <li><a href="/menu/add" class="text-white">Добавить блюдо в меню</a></li>
-                            </#if>
+                            <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><a href="/menu/add" class="text-white">Добавить блюдо в меню</a></li>
                             <br><li><a href="/login" class="text-white">Войти</a></li>
                             <li><a href="/registration" class="text-white">Зарегестрироваться</a></li>
                         </ul>

@@ -1,5 +1,6 @@
 package com.springLesson.WebSpringLesson.controllers;
 
+import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,9 +22,9 @@ public class AdminController {
         return "admin";
     }
 
-    @PostMapping("/user/ban/{id}")
-    public String userBan(@PathVariable("id") Long id) {
-        userService.banUser(id);
+    @PostMapping("/user/ban/{email}")
+    public String userBan(@PathVariable("email") String email) {
+        userService.banUser(email);
         return "redirect:/admin";
     }
 }

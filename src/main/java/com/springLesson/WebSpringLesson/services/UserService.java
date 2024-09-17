@@ -36,8 +36,8 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public void banUser(Long id) {
-        User user = userRepository.findById(id).orElse(null);
+    public void banUser(String email) {
+        User user = userRepository.findByEmail(email);
         if (user != null) {
             user.setActive(false);
             log.info("Ban user with id = {}", user.getNumber_phone());
