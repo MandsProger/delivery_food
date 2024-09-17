@@ -3,6 +3,7 @@ package com.springLesson.WebSpringLesson.controllers;
 import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.repo.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,11 +27,13 @@ public class MenuController {
         return "menuMain";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/menu/add")
     public String menuAdd(Model model) {
         return "menuAdd";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/menu/add")
     public String menuPostAdd(@RequestParam String name, @RequestParam int price,
                               @RequestParam String category, @RequestParam int remainder,
@@ -52,6 +55,7 @@ public class MenuController {
         return "menuDetails";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/menu/{food_id}/edit")
     public String menuEdit(@PathVariable(value = "food_id") int food_id, Model model) {
         if (!menuRepository.existsById(food_id)) {
@@ -64,6 +68,7 @@ public class MenuController {
         return "menuEdit";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/menu/{food_id}/edit")
     public String menuPostUpdate(@PathVariable(value = "food_id") int food_id,
                                  @RequestParam String name, @RequestParam int price,
@@ -80,6 +85,7 @@ public class MenuController {
         return "redirect:/menu";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/menu/{food_id}/remove")
     public String menuPostRemove(@PathVariable(value = "food_id") int food_id, Model model) {
         Menu menu = menuRepository.findById(food_id).orElseThrow();
