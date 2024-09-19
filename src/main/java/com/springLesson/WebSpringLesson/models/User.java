@@ -17,7 +17,8 @@ import java.util.Set;
 @Data
 public class User implements UserDetails {
     @Id
-    private Long number_phone;
+    @Column(name = "number_phone")
+    private Long numberPhone;
 
     private String name;
     private String gender;

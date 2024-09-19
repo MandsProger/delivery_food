@@ -14,12 +14,15 @@
                             <li><a href="/menu" class="text-white btn btn-dark">Меню</a></li>
                             <li><a href="/about" class="text-white btn btn-dark">О нас</a></li>
                             <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-                                <a href="/menu/add" class="text-white btn btn-dark">Добавить блюдо в меню</a>
+                                <a href="/admin" class="text-white btn btn-dark">Админ панель</a>
                             </li>
-                            <br><li><a href="/login" class="text-white btn btn-success mb-1">Войти</a></li>
-                            <li><a href="/registration" class="text-white btn btn-success">Зарегестрироваться</a></li>
+                            <br>
+                            <li><a href="/login" th:if="${#authorization.expression('!isAuthenticated()')}"
+                                   class="text-white btn btn-success mb-1">Войти</a></li>
+                            <li><a href="/registration" th:if="${#authorization.expression('!isAuthenticated()')}"
+                                   class="text-white btn btn-success">Зарегестрироваться</a></li>
                         </ul>
-                        <form action="/logout" method="post">
+                        <form action="/logout" method="post" th:if="${#authorization.expression('isAuthenticated()')}">
                             <input type="hidden" name="_csrf" value="${_csrf.token}">
                             <button type="submit" class="btn btn-success">Выйти</button>
                         </form>

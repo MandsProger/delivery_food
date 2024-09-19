@@ -14,7 +14,10 @@
                 <h3 th:text="${el.name}"/>
                 <p th:text="${el.price}"></p>
                 <a th:href="'/menu/' + ${el.food_id}" class="btn btn-warning">Подробнее</a>
-            </div>
+            </div><br>
+            <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+               href="/menu/add" class="btn btn-success">Добавить блюдо в меню
+            </a>
         </div>
     </main>
     <div th:insert="~{blocks/footer :: footer}"></div>

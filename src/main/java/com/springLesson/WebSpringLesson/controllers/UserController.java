@@ -32,14 +32,10 @@ public class UserController {
 
     @PostMapping("/registration")
     public String createUser(User user, Model model,
-                            @RequestParam String number_phone,
-                             @RequestParam String name,
-                             @RequestParam String email,
-                             @RequestParam String password,
-                             @RequestParam String gender) {
-        String cleanPhone = cleanPhoneNumber(number_phone);
+                            @RequestParam String numberPhone) {
+        String cleanPhone = cleanPhoneNumber(numberPhone);
         if (!userService.creatUser(user)) {
-            model.addAttribute("errorMessage", "Пользователь с email: " + user.getEmail() + " уже сущетсвует");
+            model.addAttribute("errorMessage", "Пользователь уже сущетсвует");
             return "registration";
         }
         userRepository.save(user);

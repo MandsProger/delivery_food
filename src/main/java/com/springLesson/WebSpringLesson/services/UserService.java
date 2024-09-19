@@ -19,10 +19,16 @@ public class UserService {
 
     public boolean creatUser(User user) {
         String email = user.getEmail();
-        if (userRepository.findByEmail(email) != null) return false;
+        Long numberPhone = user.getNumberPhone();
+        if (userRepository.findByNumberPhone(numberPhone) != null) {
+            return false;
+        }
+        if (userRepository.findByEmail(email) != null) {
+            return false;
+        }
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add(Role.ROLE_ADMIN);
+        user.getRoles().add(Role.ROLE_USER);
         log.info("Saving new User with email {}", email);
         userRepository.save(user);
         return true;
@@ -36,11 +42,19 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public void banUser(String email) {
-        User user = userRepository.findByEmail(email);
+    public User getUserByNumberPhone(Long numberPhone){return userRepository.findByNumberPhone(numberPhone);}
+
+    public void banUser(Long numberPhone) {
+        User user = userRepository.findByNumberPhone(numberPhone);
         if (user != null) {
-            user.setActive(false);
-            log.info("Ban user with id = {}", user.getNumber_phone());
+            if (user.isActive()) {
+                user.setActive(false);
+                log.info("Ban user with id = {}", user.getNumberPhone());
+            } else  {
+                user.setActive(true);
+                log.info("UnBan user with id = {}", user.getNumberPhone());
+            }
+
         }
         userRepository.save(user);
     }

@@ -21,19 +21,20 @@
         </tr>
 
         <tr th:each="user : ${users}" class="tr">
-            <td th:text="${user.number_phone}"></td>
+            <td th:text="${user.numberPhone}"></td>
             <td th:text="${user.name}"></td>
             <td th:text="${user.email}"></td>
             <td th:text="${user.gender}"></td>
             <th th:each="role : ${user.roles}" th:text="${role}"></th>
             <th th:text="${user.active ? 'true' : 'false'}"></th>
             <th>
-            <a th:href="'/admin/user/edit/'+${user.email}" class="btn btn-info">Редактировать</a>
+                <a th:href="'/admin/users/edit/'+${user.numberPhone}" class="btn btn-info">Редактировать</a>
             </th>
             <th>
-                <form action="@{/admin/user/ban/{email}(email=${user.email})}" method="post">
+                <form th:action="'/admin/users/ban/'+${user.numberPhone}" method="post">
                     <input type="hidden" name="_csrf" value="${_csrf.token}">
-                    <input type="submit" value="Бан" class="btn btn-danger">
+                    <input th:value="${user.active ? 'Бан' : 'Разбан'}" type="submit" class="btn btn-danger">
+
                 </form>
             </th>
         </tr>
