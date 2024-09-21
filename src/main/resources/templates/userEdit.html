@@ -17,17 +17,19 @@
                 <input type="text" th:value="${user.bonus}" name="bonus" placeholder="Редактировать бонусы" class="form-control" required><br>
                 <input type="password" name="password" placeholder="Новый пароль" class="form-control"><br>
                 <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="gender" value="male" required th:checked="${user.gender=='male'}">
+                    <input class="form-check-input" type="radio" name="gender" value="MALE" required
+                           th:checked="${user.gender == 'male'}">
                     Мужской
                 </label>
                 <br>
                 <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="gender" value="female" required th:checked="${user.gender=='female'}">
+                    <input class="form-check-input" type="radio" name="gender" value="FEMALE" required
+                           th:checked="${user.gender == 'female'}">
                     Женский
                 </label><br>
                 <select name="roles" class="mt-3 form-select">
-                    <option value="ROLE_ADMIN" >Администратор</option>
-                    <option value="ROLE_USER">Пользователь</option>
+                    <option value="ROLE_ADMIN" th:selected="${user.authorities.contains('ROLE_ADMIN')}">Администратор</option>
+                    <option value="ROLE_USER" th:selected="${user.authorities.contains('ROLE_USER')}">Пользователь</option>
                 </select><br>
                 <input type="hidden" name="_csrf" value="${_csrf.token}">
                 <button type="submit" class="btn btn-success mt-3">Обновить</button>

@@ -34,7 +34,7 @@ public class UserController {
     public String createUser(User user, Model model,
                             @RequestParam String numberPhone) {
         String cleanPhone = cleanPhoneNumber(numberPhone);
-        if (!userService.creatUser(user)) {
+        if (!userService.createUser(user)) {
             model.addAttribute("errorMessage", "Пользователь уже сущетсвует");
             return "registration";
         }

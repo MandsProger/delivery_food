@@ -1,6 +1,7 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.User;
+import com.springLesson.WebSpringLesson.models.enums.Gender;
 import com.springLesson.WebSpringLesson.models.enums.Role;
 import com.springLesson.WebSpringLesson.repo.UserRepository;
 import com.springLesson.WebSpringLesson.services.UserService;
@@ -62,7 +63,7 @@ public class AdminController {
                                              Long numberPhone, Model model,
                                  @RequestParam String name, @RequestParam String email,
                                  @RequestParam int bonus, @RequestParam String password,
-                                 @RequestParam String gender, @RequestParam("roles") String[] roleNames) {
+                                 @RequestParam("gender") Gender gender, @RequestParam("roles") String[] roleNames) {
 
         User user = userRepository.findByNumberPhone(numberPhone);
         user.setName(name);

@@ -1,5 +1,6 @@
 package com.springLesson.WebSpringLesson.models;
 
+import com.springLesson.WebSpringLesson.models.enums.Gender;
 import com.springLesson.WebSpringLesson.models.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,11 +21,23 @@ public class User implements UserDetails {
     @Column(name = "number_phone")
     private Long numberPhone;
 
+    @Column(name = "name")
     private String name;
-    private String gender;
+
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "bonus")
     private int bonus;
+
+    @Column(name = "active")
     private boolean active;
+
+    @Column(name = "password")
     private String password;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -32,7 +45,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "date_of_registration")
     private LocalDateTime date_of_registration;
 
 

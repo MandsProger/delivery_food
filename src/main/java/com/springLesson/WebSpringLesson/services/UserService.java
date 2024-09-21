@@ -17,7 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public boolean creatUser(User user) {
+    public boolean createUser(User user) {
         String email = user.getEmail();
         Long numberPhone = user.getNumberPhone();
         if (userRepository.findByNumberPhone(numberPhone) != null) {

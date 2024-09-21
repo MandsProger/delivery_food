@@ -21,10 +21,10 @@
         </tr>
 
         <tr th:each="user : ${users}" class="tr">
-            <td th:text="${user.numberPhone}"></td>
-            <td th:text="${user.name}"></td>
-            <td th:text="${user.email}"></td>
-            <td th:text="${user.gender}"></td>
+            <th th:text="${user.numberPhone}"></th>
+            <th th:text="${user.name}"></th>
+            <th th:text="${user.email}"></th>
+            <th th:each="gender : ${user.gender}" th:text="${gender}"></th>
             <th th:each="role : ${user.roles}" th:text="${role}"></th>
             <th th:text="${user.active ? 'true' : 'false'}"></th>
             <th>
