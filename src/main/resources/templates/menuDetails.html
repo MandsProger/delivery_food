@@ -16,8 +16,8 @@
             <h5 th:text="'Остаток на складе: ' + ${el.remainder}"></h5>
             <h5 th:text="'Описание: ' + ${el.description}"></h5>
             <h5 th:text="'Объем: ' + ${el.volume}"></h5>
-            <a th:href="'/menu/' + ${el.food_id} + '/edit'" class="btn btn-warning">Редактировать</a><br><br>
-            <form th:action="'/menu/' + ${el.food_id} + '/remove'" method="post">
+            <a th:href="'/menu/' + ${el.foodId} + '/edit'" class="btn btn-warning">Редактировать</a><br><br>
+            <form th:action="'/menu/' + ${el.foodId} + '/remove'" method="post">
                 <button class="btn btn-warning" type="submit">Удалить</button>
             </form>
         </div>

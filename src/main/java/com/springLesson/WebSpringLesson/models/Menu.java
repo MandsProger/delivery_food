@@ -3,23 +3,28 @@ package com.springLesson.WebSpringLesson.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "menu")
+@Table(name = "menu", schema = "food")
 public class Menu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long food_id;
+    @Column(name = "food_id")
+    private long foodId;
 
-    private int price, remainder;
+    private int price,
+            remainder;
 
-    private String name, category, description, volume;
+    private String name,
+            category,
+            description,
+            volume;
 
-    public long getFood_id() {
-        return food_id;
+    public long getFoodId() {
+        return foodId;
     }
 
-    public void setFood_id(long food_id) {
-        this.food_id = food_id;
+    public void setFoodId(long foodId) {
+        this.foodId = foodId;
     }
 
     public int getPrice() {

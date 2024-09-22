@@ -2,6 +2,7 @@ package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.repo.MenuRepository;
+import com.springLesson.WebSpringLesson.services.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,13 +17,17 @@ import java.util.Optional;
 
 @Controller
 public class MenuController {
+    @Autowired
+    private MenuService menuService;
 
     @Autowired
-    private MenuRepository menuRepository;
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
     @GetMapping("/menu")
     public String menuMain(Model model) {
-        Iterable<Menu> menus = menuRepository.findAll();
+        Iterable<Menu> menus = menuService.findAllMenu();
         model.addAttribute("menus", menus);
         return "menuMain";
     }
@@ -39,16 +44,16 @@ public class MenuController {
                               @RequestParam String category, @RequestParam int remainder,
                               @RequestParam String description, @RequestParam String volume, Model model) {
         Menu menu = new Menu(price, remainder, name, category, description, volume);
-        menuRepository.save(menu);
+        menuService.saveMenu(menu);
         return "redirect:/menu";
     }
 
-    @GetMapping("/menu/{food_id}")
-    public String menuDetails(@PathVariable(value = "food_id") int food_id, Model model) {
-        if (!menuRepository.existsById(food_id)) {
+    @GetMapping("/menu/{foodId}")
+    public String menuDetails(@PathVariable(value = "foodId") int foodId, Model model) {
+        if (!menuService.existsMenuById(foodId)) {
             return "redirect:/menu";
         }
-        Optional<Menu> menu = menuRepository.findById(food_id);
+        Optional<Menu> menu = menuService.findOptionalByMenuId(foodId);
         ArrayList<Menu> menus = new ArrayList<>();
         menu.ifPresent(menus::add);
         model.addAttribute("menu", menus);
@@ -56,12 +61,12 @@ public class MenuController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @GetMapping("/menu/{food_id}/edit")
-    public String menuEdit(@PathVariable(value = "food_id") int food_id, Model model) {
-        if (!menuRepository.existsById(food_id)) {
+    @GetMapping("/menu/{foodId}/edit")
+    public String menuEdit(@PathVariable(value = "foodId") int foodId, Model model) {
+        if (!menuService.existsMenuById(foodId)) {
             return "redirect:/menu";
         }
-        Optional<Menu> menu = menuRepository.findById(food_id);
+        Optional<Menu> menu = menuService.findOptionalByMenuId(foodId);
         ArrayList<Menu> menus = new ArrayList<>();
         menu.ifPresent(menus::add);
         model.addAttribute("menu", menus);
@@ -69,27 +74,27 @@ public class MenuController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/menu/{food_id}/edit")
-    public String menuPostUpdate(@PathVariable(value = "food_id") int food_id,
+    @PostMapping("/menu/{foodId}/edit")
+    public String menuPostUpdate(@PathVariable(value = "foodId") int foodId,
                                  @RequestParam String name, @RequestParam int price,
                               @RequestParam String category, @RequestParam int remainder,
                               @RequestParam String description, @RequestParam String volume, Model model) {
-        Menu menu = menuRepository.findById(food_id).orElseThrow();
+        Menu menu = menuService.findByMenuId(foodId);
         menu.setName(name);
         menu.setPrice(price);
         menu.setCategory(category);
         menu.setRemainder(remainder);
         menu.setDescription(description);
         menu.setVolume(volume);
-        menuRepository.save(menu);
+        menuService.saveMenu(menu);
         return "redirect:/menu";
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/menu/{food_id}/remove")
-    public String menuPostRemove(@PathVariable(value = "food_id") int food_id, Model model) {
-        Menu menu = menuRepository.findById(food_id).orElseThrow();
-        menuRepository.delete(menu);
+    @PostMapping("/menu/{foodId}/remove")
+    public String menuPostRemove(@PathVariable(value = "foodId") int foodId, Model model) {
+        Menu menu = menuService.findByMenuId(foodId);
+        menuService.delete(menu);
         return "redirect:/menu";
     }
 }

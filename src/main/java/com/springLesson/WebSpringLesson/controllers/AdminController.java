@@ -24,7 +24,6 @@ import java.util.Set;
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class AdminController {
     public final UserService userService;
-    public final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/admin/users")
@@ -65,7 +64,7 @@ public class AdminController {
                                  @RequestParam int bonus, @RequestParam String password,
                                  @RequestParam("gender") Gender gender, @RequestParam("roles") String[] roleNames) {
 
-        User user = userRepository.findByNumberPhone(numberPhone);
+        User user = userService.getUserByNumberPhone(numberPhone);
         user.setName(name);
         user.setEmail(email);
         user.setBonus(bonus);
@@ -82,7 +81,7 @@ public class AdminController {
         user.setRoles(roles);
 
 
-        userRepository.save(user);
+        userService.saveUser(user);
 
         return "redirect:/admin/users";
     }

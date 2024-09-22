@@ -34,6 +34,8 @@ public class UserService {
         return true;
     }
 
+    public User saveUser(User user){return userRepository.save(user);}
+
     public List<User> list() {
         return userRepository.findAll();
     }

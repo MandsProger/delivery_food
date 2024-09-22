@@ -18,7 +18,6 @@ import java.time.Period;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @GetMapping("/login")
     public String login() {
@@ -38,7 +37,7 @@ public class UserController {
             model.addAttribute("errorMessage", "Пользователь уже сущетсвует");
             return "registration";
         }
-        userRepository.save(user);
+        userService.saveUser(user);
 
         return "redirect:/login";
     }
