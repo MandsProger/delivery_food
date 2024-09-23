@@ -28,8 +28,12 @@
             <input type="hidden" name="_csrf" value="${_csrf.token}">
             <button type="submit" class="btn btn-success">Зарегистрироваться</button>
             <br><br>
-            <h2 style="color: red" th:text="${errorMessage}"/>
         </form>
+        <span th:if="${errorMessage ne null}">
+            <div th:fragment="error" id="error" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
+            </div>
+        </span>
     </div>
 </main>
 <div th:insert="~{blocks/footer :: footer}"></div>

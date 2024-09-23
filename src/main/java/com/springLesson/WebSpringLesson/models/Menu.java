@@ -19,6 +19,9 @@ public class Menu {
             description,
             volume;
 
+    public Menu() {
+    }
+
     public long getFoodId() {
         return foodId;
     }
@@ -75,15 +78,63 @@ public class Menu {
         this.volume = volume;
     }
 
-    public Menu(int price, int remainder, String name, String category, String description, String volume) {
-        this.name = name;
-        this.price = price;
-        this.category = category;
-        this.remainder = remainder;
-        this.description = description;
-        this.volume = volume;
+    public Menu(Builder builder) {
+        this.foodId = builder.foodId;
+        this.name = builder.name;
+        this.price = builder.price;
+        this.category = builder.category;
+        this.remainder = builder.remainder;
+        this.description = builder.description;
+        this.volume = builder.volume;
     }
 
-    public Menu() {
+    public static class Builder {
+        private int foodId;
+        private String name;
+        private int price;
+        private String category;
+        private int remainder;
+        private String description;
+        private String volume;
+
+        public Builder withFoodId(int foodId) {
+            this.foodId = foodId;
+            return this;
+        }
+
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder withPrice(int price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder withCategory(String category) {
+            this.category = category;
+            return this;
+        }
+
+        public Builder withRemainder(int remainder) {
+            this.remainder = remainder;
+            return this;
+        }
+
+        public Builder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder withVolume(String volume) {
+            this.volume = volume;
+            return this;
+        }
+
+        public Menu build() {
+            return new Menu(this);
+        }
     }
+
 }

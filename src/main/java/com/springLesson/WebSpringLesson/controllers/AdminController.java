@@ -3,7 +3,6 @@ package com.springLesson.WebSpringLesson.controllers;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.models.enums.Gender;
 import com.springLesson.WebSpringLesson.models.enums.Role;
-import com.springLesson.WebSpringLesson.repo.UserRepository;
 import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 @Controller
@@ -24,7 +22,6 @@ import java.util.Set;
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class AdminController {
     public final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/admin/users")
     public String adminUser(Model model) {
@@ -62,27 +59,8 @@ public class AdminController {
                                              Long numberPhone, Model model,
                                  @RequestParam String name, @RequestParam String email,
                                  @RequestParam int bonus, @RequestParam String password,
-                                 @RequestParam("gender") Gender gender, @RequestParam("roles") String[] roleNames) {
-
-        User user = userService.getUserByNumberPhone(numberPhone);
-        user.setName(name);
-        user.setEmail(email);
-        user.setBonus(bonus);
-        if (password != "") {
-            user.setPassword(passwordEncoder.encode(password));
-        }
-        user.setGender(gender);
-
-
-        Set<Role> roles = new HashSet<>();
-        for (String role : roleNames) {
-            roles.add(Role.valueOf(role));
-        }
-        user.setRoles(roles);
-
-
-        userService.saveUser(user);
-
+                                 @RequestParam("gender") Gender gender, @RequestParam("roles") Set<Role> roleNames) {
+        userService.userUpdate(numberPhone, name, email, gender, bonus, roleNames, password);
         return "redirect:/admin/users";
     }
 }

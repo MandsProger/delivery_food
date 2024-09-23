@@ -33,11 +33,17 @@ public class UserController {
     public String createUser(User user, Model model,
                             @RequestParam String numberPhone) {
         String cleanPhone = cleanPhoneNumber(numberPhone);
-        if (!userService.createUser(user)) {
-            model.addAttribute("errorMessage", "Пользователь уже сущетсвует");
+        if (userService.createUser(user) == "done") {
+            userService.createUser(user);
+        } else if (userService.createUser(user) == "ErrorNumberPhone"){
+            model.addAttribute("errorMessage", "Пользователь с таким номером уже сущетсвует");
+            return "registration";
+        } else if (userService.createUser(user) == "ErrorEmail"){
+            model.addAttribute("errorMessage", "Пользователь с таким email уже сущетсвует");
+            return "registration";
+        } else {
             return "registration";
         }
-        userService.saveUser(user);
 
         return "redirect:/login";
     }

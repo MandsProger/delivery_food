@@ -33,4 +33,31 @@ public class MenuService {
     public Menu findByMenuId(Integer foodId) {return menuRepository.findById(foodId).orElseThrow();}
 
     public boolean existsMenuById(Integer foodId) {return menuRepository.existsById(foodId);}
+
+    public void menuAddBuild(String name, int price, String category, int remainder,
+                                String description, String volume) {
+        Menu.Builder builder = new Menu.Builder();
+        builder.withName(name)
+                .withPrice(price)
+                .withCategory(category)
+                .withRemainder(remainder)
+                .withDescription(description)
+                .withVolume(volume);
+        Menu menu = builder.build();
+        saveMenu(menu);
+    }
+
+    public void menuEditBuild(Integer foodId, String name, int price, String category, int remainder,
+                             String description, String volume) {
+        Menu.Builder builder = new Menu.Builder();
+        builder.withFoodId(foodId)
+                .withName(name)
+                .withPrice(price)
+                .withCategory(category)
+                .withRemainder(remainder)
+                .withDescription(description)
+                .withVolume(volume);
+        Menu menu = builder.build();
+        saveMenu(menu);
+    }
 }

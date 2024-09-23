@@ -1,7 +1,6 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.Menu;
-import com.springLesson.WebSpringLesson.repo.MenuRepository;
 import com.springLesson.WebSpringLesson.services.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,9 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 @Controller
 public class MenuController {
@@ -43,8 +40,7 @@ public class MenuController {
     public String menuPostAdd(@RequestParam String name, @RequestParam int price,
                               @RequestParam String category, @RequestParam int remainder,
                               @RequestParam String description, @RequestParam String volume, Model model) {
-        Menu menu = new Menu(price, remainder, name, category, description, volume);
-        menuService.saveMenu(menu);
+        menuService.menuAddBuild(name, price, category, remainder, description, volume);
         return "redirect:/menu";
     }
 
@@ -53,10 +49,8 @@ public class MenuController {
         if (!menuService.existsMenuById(foodId)) {
             return "redirect:/menu";
         }
-        Optional<Menu> menu = menuService.findOptionalByMenuId(foodId);
-        ArrayList<Menu> menus = new ArrayList<>();
-        menu.ifPresent(menus::add);
-        model.addAttribute("menu", menus);
+        menuService.findOptionalByMenuId(foodId).ifPresent(menu ->
+                model.addAttribute("menu", List.of(menu)));
         return "menuDetails";
     }
 
@@ -66,10 +60,8 @@ public class MenuController {
         if (!menuService.existsMenuById(foodId)) {
             return "redirect:/menu";
         }
-        Optional<Menu> menu = menuService.findOptionalByMenuId(foodId);
-        ArrayList<Menu> menus = new ArrayList<>();
-        menu.ifPresent(menus::add);
-        model.addAttribute("menu", menus);
+        menuService.findOptionalByMenuId(foodId).ifPresent(menu ->
+                model.addAttribute("menu", List.of(menu)));
         return "menuEdit";
     }
 
@@ -79,14 +71,7 @@ public class MenuController {
                                  @RequestParam String name, @RequestParam int price,
                               @RequestParam String category, @RequestParam int remainder,
                               @RequestParam String description, @RequestParam String volume, Model model) {
-        Menu menu = menuService.findByMenuId(foodId);
-        menu.setName(name);
-        menu.setPrice(price);
-        menu.setCategory(category);
-        menu.setRemainder(remainder);
-        menu.setDescription(description);
-        menu.setVolume(volume);
-        menuService.saveMenu(menu);
+        menuService.menuEditBuild(foodId, name, price, category, remainder, description, volume);
         return "redirect:/menu";
     }
 
