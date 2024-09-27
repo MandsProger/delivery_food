@@ -1,36 +1,14 @@
-package com.springLesson.WebSpringLesson.models;
+package com.springLesson.WebSpringLesson.request;
 
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "menu", schema = "food")
-public class Menu {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "food_id")
-    private Long foodId;
-
-    @Column(name = "price")
+public class MenuEditRequest {
+    private long foodId;
     private int price;
-
-    @Column(name = "remainder")
     private int remainder;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "category")
     private String category;
-
-    @Column(name = "description")
     private String description;
-
-    @Column(name = "volume")
     private String volume;
-
-    public Menu() {
-    }
 
     public long getFoodId() {
         return foodId;
@@ -87,5 +65,4 @@ public class Menu {
     public void setVolume(String volume) {
         this.volume = volume;
     }
-
 }

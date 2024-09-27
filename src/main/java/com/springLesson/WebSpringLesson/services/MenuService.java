@@ -3,6 +3,7 @@ package com.springLesson.WebSpringLesson.services;
 
 import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.repo.MenuRepository;
+import com.springLesson.WebSpringLesson.request.MenuEditRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,36 +29,23 @@ public class MenuService {
         menuRepository.delete(menu);
     }
 
-    public Optional<Menu> findOptionalByMenuId(Integer foodId) {return menuRepository.findById(foodId);}
+    public Optional<Menu> findOptionalByMenuId(Long foodId) {return menuRepository.findOptionalByFoodId(foodId);}
 
-    public Menu findByMenuId(Integer foodId) {return menuRepository.findById(foodId).orElseThrow();}
+    public Menu findByMenuId(Long foodId) {return menuRepository.findByFoodId(foodId);}
 
     public boolean existsMenuById(Integer foodId) {return menuRepository.existsById(foodId);}
 
-    public void menuAddBuild(String name, int price, String category, int remainder,
-                                String description, String volume) {
-        Menu.Builder builder = new Menu.Builder();
-        builder.withName(name)
-                .withPrice(price)
-                .withCategory(category)
-                .withRemainder(remainder)
-                .withDescription(description)
-                .withVolume(volume);
-        Menu menu = builder.build();
-        saveMenu(menu);
-    }
-
-    public void menuEditBuild(Integer foodId, String name, int price, String category, int remainder,
-                             String description, String volume) {
-        Menu.Builder builder = new Menu.Builder();
-        builder.withFoodId(foodId)
-                .withName(name)
-                .withPrice(price)
-                .withCategory(category)
-                .withRemainder(remainder)
-                .withDescription(description)
-                .withVolume(volume);
-        Menu menu = builder.build();
-        saveMenu(menu);
+    public void menuEdit(Long foodId, MenuEditRequest menuEditRequest) {
+        Menu menu = findByMenuId(foodId);
+        if (menu == null) {
+            menu = new Menu();
+        }
+            menu.setName(menuEditRequest.getName());
+            menu.setCategory(menuEditRequest.getCategory());
+            menu.setDescription(menuEditRequest.getDescription());
+            menu.setPrice(menuEditRequest.getPrice());
+            menu.setRemainder(menuEditRequest.getRemainder());
+            menu.setVolume(menuEditRequest.getVolume());
+            saveMenu(menu);
     }
 }

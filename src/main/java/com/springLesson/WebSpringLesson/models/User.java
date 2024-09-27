@@ -3,6 +3,8 @@ package com.springLesson.WebSpringLesson.models;
 import com.springLesson.WebSpringLesson.models.enums.Gender;
 import com.springLesson.WebSpringLesson.models.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +16,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users", schema = "food")
-@Data
-public class User implements UserDetails {
+public class User implements UserDetails{
 
     @Id
     @Column(name = "number_phone")
@@ -29,6 +30,7 @@ public class User implements UserDetails {
     private Gender gender;
 
     @Column(name = "email")
+    @Email
     private String email;
 
     @Column(name = "bonus")
@@ -63,95 +65,92 @@ public class User implements UserDetails {
         return roles;
     }
 
+    public Long getNumberPhone() {
+        return numberPhone;
+    }
+
+    public void setNumberPhone(Long numberPhone) {
+        this.numberPhone = numberPhone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(int bonus) {
+        this.bonus = bonus;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String getUsername() {
         return email;
     }
 
-    public User(Builder builder) {
-        this.numberPhone = builder.numberPhone;
-        this.name = builder.name;
-        this.gender = builder.gender;
-        this.bonus = builder.bonus;
-        this.email = builder.email;
-        this.password = builder.password;
-        this.roles = builder.roles;
-        this.active = builder.active;
-    }
-
-    public static class Builder {
-        private Long numberPhone;
-        private String name;
-        private Gender gender;
-        private int bonus;
-        private String email;
-        private String password;
-        private Set<Role> roles;
-        private boolean active;
-
-
-        public User.Builder withNumberPhone(Long numberPhone) {
-            this.numberPhone = numberPhone;
-            return this;
-        }
-
-        public User.Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public User.Builder withGender(Gender gender) {
-            this.gender = gender;
-            return this;
-        }
-
-        public User.Builder withEmail(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public User.Builder withBonus(int bonus) {
-            this.bonus = bonus;
-            return this;
-        }
-
-        public User.Builder withPassword(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public User.Builder withRole(Set<Role> roles) {
-            this.roles = roles;
-            return this;
-        }
-
-        public User.Builder withActive(boolean active) {
-            this.active = active;
-            return this;
-        }
-
-        public User build() {
-            return new User(this);
-        }
-    }
-
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return UserDetails.super.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return UserDetails.super.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return UserDetails.super.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return active;
+        return UserDetails.super.isEnabled();
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

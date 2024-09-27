@@ -1,18 +1,16 @@
 package com.springLesson.WebSpringLesson.services;
 
 import com.springLesson.WebSpringLesson.models.User;
-import com.springLesson.WebSpringLesson.models.enums.Gender;
 import com.springLesson.WebSpringLesson.models.enums.Role;
 import com.springLesson.WebSpringLesson.repo.UserRepository;
+import com.springLesson.WebSpringLesson.request.UserEditRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
+
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -48,43 +46,41 @@ public class UserService {
         saveUser(user);
     }
 
-    public String createUser(User user) {
+    public void createUser(User user) {
         String email = user.getEmail();
         Long numberPhone = user.getNumberPhone();
         if (userRepository.findByNumberPhone(numberPhone) != null) {
-            return "ErrorNumberPhone";
+            throw new IllegalArgumentException("Пользователь с таким номером уже существует");
         }
         if (userRepository.findByEmail(email) != null) {
-            return "ErrorEmail";
+            throw new IllegalArgumentException("Пользователь с таким email уже существует");
         }
+
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(Role.ROLE_USER);
         log.info("Saving new User with email {}", email);
         saveUser(user);
-        return "done";
     }
 
-    public void userUpdate(Long numberPhone, String name, String email, Gender gender,
-                     int bonus, Set<Role> roles, String password) {
+    private Long cleanPhoneNumber(String phone) {
+        String phoneStr = phone.replaceAll("[^\\d]", "");
+        phoneStr = phoneStr.replaceAll("[()]|-", "");
+        return Long.parseLong(phoneStr);
+    }
 
-        User user = userRepository.findByNumberPhone(numberPhone);
-        User.Builder builder = new User.Builder();
-        builder.withNumberPhone(numberPhone)
-                .withEmail(email)
-                .withName(name)
-                .withGender(gender)
-                .withBonus(bonus)
-                .withRole(roles);
-
-        if (!password.isEmpty()) {
-            builder.withPassword(passwordEncoder.encode(password));
-        } else {
-            String storedPassword = user.getPassword();
-            builder.withPassword(storedPassword);
+    public void userUpdate(Long numberPhone, UserEditRequest userEditRequest) {
+        User user = getUserByNumberPhone(numberPhone);
+        if (user != null) {
+            user.setName(userEditRequest.getName());
+            user.setEmail(userEditRequest.getEmail());
+            user.setBonus(userEditRequest.getBonus());
+            user.setGender(userEditRequest.getGender());
+            user.setRoles(userEditRequest.getRoles());
+            if (!userEditRequest.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userEditRequest.getPassword()));
+            }
+            saveUser(user);
         }
-
-        user = builder.build();
-        saveUser(user);
     }
 }

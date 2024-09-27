@@ -1,21 +1,17 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.User;
-import com.springLesson.WebSpringLesson.models.enums.Gender;
 import com.springLesson.WebSpringLesson.models.enums.Role;
+import com.springLesson.WebSpringLesson.request.UserEditRequest;
 import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -54,13 +50,13 @@ public class AdminController {
         return "/userEdit";
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/admin/users/edit/{numberPhone}")
     public String userEditUpdate(@PathVariable(value = "numberPhone")
                                              Long numberPhone, Model model,
-                                 @RequestParam String name, @RequestParam String email,
-                                 @RequestParam int bonus, @RequestParam String password,
-                                 @RequestParam("gender") Gender gender, @RequestParam("roles") Set<Role> roleNames) {
-        userService.userUpdate(numberPhone, name, email, gender, bonus, roleNames, password);
+                                 @ModelAttribute UserEditRequest user) {
+        userService.userUpdate(numberPhone, user);
         return "redirect:/admin/users";
     }
+
 }
