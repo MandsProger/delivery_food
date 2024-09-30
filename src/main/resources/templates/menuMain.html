@@ -12,7 +12,7 @@
             <h1>Меню</h1>
             <div th:each="el : ${menus}" class="alert, alert-info, mt-2">
                 <h3 th:text="${el.name}"/>
-                <p th:text="${el.price}"></p>
+                <p th:text="${el.price} + ' руб.'"></p>
                 <a th:href="'/menu/' + ${el.foodId}" class="btn btn-warning">Подробнее</a>
             </div><br>
             <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"

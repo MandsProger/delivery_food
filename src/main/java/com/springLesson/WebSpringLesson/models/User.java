@@ -4,7 +4,9 @@ import com.springLesson.WebSpringLesson.models.enums.Gender;
 import com.springLesson.WebSpringLesson.models.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,26 +22,34 @@ public class User implements UserDetails{
 
     @Id
     @Column(name = "number_phone")
+    @NotNull
     private Long numberPhone;
 
     @Column(name = "name")
+    @NotNull
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$")
     private String name;
 
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Gender gender;
 
     @Column(name = "email")
     @Email
+    @NotNull
     private String email;
 
     @Column(name = "bonus")
+    @NotNull
     private int bonus;
 
     @Column(name = "active")
+    @NotNull
     private boolean active;
 
     @Column(name = "password")
+    @NotNull
     private String password;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

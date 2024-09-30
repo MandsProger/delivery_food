@@ -67,8 +67,7 @@ public class MenuController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/menu/{foodId}/remove")
     public String menuPostRemove(@PathVariable(value = "foodId") Long foodId, Model model) {
-        Menu menu = menuService.findByMenuId(foodId);
-        menuService.delete(menu);
+        menuService.delete(foodId);
         return "redirect:/menu";
     }
 }

@@ -1,6 +1,8 @@
 package com.springLesson.WebSpringLesson.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "menu", schema = "food")
@@ -9,24 +11,33 @@ public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "food_id")
+    @NotNull
     private Long foodId;
 
     @Column(name = "price")
+    @NotNull
     private int price;
 
     @Column(name = "remainder")
+    @NotNull
     private int remainder;
 
     @Column(name = "name")
+    @NotNull
+    @Pattern(regexp = "^[а-яА-Я]{1,50}$")
     private String name;
 
     @Column(name = "category")
+    @NotNull
+    @Pattern(regexp = "^[а-яА-Я]{1,50}$")
     private String category;
 
     @Column(name = "description")
+    @Pattern(regexp = "^[а-яА-Я]{1,50}$")
     private String description;
 
     @Column(name = "volume")
+    @NotNull
     private String volume;
 
     public Menu() {

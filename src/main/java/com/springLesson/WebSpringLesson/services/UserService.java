@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class UserService {
         saveUser(user);
     }
 
+    @Transactional
     public void createUser(User user) {
         String email = user.getEmail();
         Long numberPhone = user.getNumberPhone();
@@ -69,6 +71,7 @@ public class UserService {
         return Long.parseLong(phoneStr);
     }
 
+    @Transactional
     public void userUpdate(Long numberPhone, UserEditRequest userEditRequest) {
         User user = getUserByNumberPhone(numberPhone);
         if (user != null) {

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,8 @@ public class MenuService {
 
     public List<Menu> findAllMenu() {return menuRepository.findAll();}
 
-    public void delete(Menu menu) {
+    public void delete(Long foodID) {
+        Menu menu = menuRepository.findByFoodId(foodID);
         menuRepository.delete(menu);
     }
 
@@ -35,6 +37,7 @@ public class MenuService {
 
     public boolean existsMenuById(Integer foodId) {return menuRepository.existsById(foodId);}
 
+    @Transactional
     public void menuEdit(Long foodId, MenuEditRequest menuEditRequest) {
         Menu menu = findByMenuId(foodId);
         if (menu == null) {
