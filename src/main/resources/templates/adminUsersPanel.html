@@ -18,6 +18,7 @@
             <th>Активность: </th>
             <th>Редактировать: </th>
             <th>Бан: </th>
+            <th>Удалить: </th>
         </tr>
 
         <tr th:each="user : ${users}" class="tr">
@@ -35,6 +36,11 @@
                     <input type="hidden" name="_csrf" value="${_csrf.token}">
                     <input th:value="${user.active ? 'Бан' : 'Разбан'}" type="submit" class="btn btn-danger">
 
+                </form>
+            </th>
+            <th>
+                <form th:action="'/admin/users/remove/'+${user.numberPhone}" method="post">
+                    <button class="btn btn-warning" type="submit">Удалить</button>
                 </form>
             </th>
         </tr>

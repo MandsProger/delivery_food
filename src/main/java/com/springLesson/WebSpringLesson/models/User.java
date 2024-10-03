@@ -3,11 +3,9 @@ package com.springLesson.WebSpringLesson.models;
 import com.springLesson.WebSpringLesson.models.enums.Gender;
 import com.springLesson.WebSpringLesson.models.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,6 +16,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users", schema = "food")
+@Setter @Getter
 public class User implements UserDetails{
 
     @Id
@@ -27,7 +26,7 @@ public class User implements UserDetails{
 
     @Column(name = "name")
     @NotNull
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$", message = "Имя должно быть только на англ. и русском языке и без цифр")
     private String name;
 
     @Column(name = "gender")
@@ -75,61 +74,9 @@ public class User implements UserDetails{
         return roles;
     }
 
-    public Long getNumberPhone() {
-        return numberPhone;
-    }
-
-    public void setNumberPhone(Long numberPhone) {
-        this.numberPhone = numberPhone;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getBonus() {
-        return bonus;
-    }
-
-    public void setBonus(int bonus) {
-        this.bonus = bonus;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     @Override
     public String getUsername() {
-        return email;
+        return name;
     }
 
     @Override
@@ -152,15 +99,12 @@ public class User implements UserDetails{
         return UserDetails.super.isEnabled();
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setNumberPhoneException(Long numberPhone) {
+        String phoneStr = String.valueOf(numberPhone);
+        if (phoneStr.length() == 11 && phoneStr.startsWith("7")) {
+            this.numberPhone = numberPhone;
+        } else {
+            throw new IllegalArgumentException("Номер телефона должен начинаться с 7 и содержать 11 цифр.");
+        }
     }
 }

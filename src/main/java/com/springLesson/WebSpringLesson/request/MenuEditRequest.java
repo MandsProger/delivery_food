@@ -1,68 +1,34 @@
 package com.springLesson.WebSpringLesson.request;
 
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter @Getter
 public class MenuEditRequest {
+
+    @NotNull
     private long foodId;
+
+    @NotNull
     private int price;
+
+    @NotNull
     private int remainder;
+
+    @NotNull
+    @Pattern(regexp = "^[а-яА-Я]{1,50}$")
     private String name;
+
+    @NotNull
+    @Pattern(regexp = "^[а-яА-Я]{1,50}$")
     private String category;
+
+    @Pattern(regexp = "^[а-яА-Я]{1,50}$")
     private String description;
+
+    @NotNull
     private String volume;
-
-    public long getFoodId() {
-        return foodId;
-    }
-
-    public void setFoodId(long foodId) {
-        this.foodId = foodId;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public int getRemainder() {
-        return remainder;
-    }
-
-    public void setRemainder(int remainder) {
-        this.remainder = remainder;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getVolume() {
-        return volume;
-    }
-
-    public void setVolume(String volume) {
-        this.volume = volume;
-    }
 }

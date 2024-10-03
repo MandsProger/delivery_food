@@ -20,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public User saveUser(User user){return userRepository.save(user);}
 
     public List<User> list() {
@@ -32,6 +33,12 @@ public class UserService {
 
     public User getUserByNumberPhone(Long numberPhone){return userRepository.findByNumberPhone(numberPhone);}
 
+    @Transactional
+    public void delete(Long foodID) {
+        userRepository.deleteById(foodID);
+    }
+
+    @Transactional
     public void banUser(Long numberPhone) {
         User user = getUserByNumberPhone(numberPhone);
         if (user != null) {
@@ -42,7 +49,6 @@ public class UserService {
                 user.setActive(true);
                 log.info("UnBan user with id = {}", user.getNumberPhone());
             }
-
         }
         saveUser(user);
     }
@@ -57,7 +63,7 @@ public class UserService {
         if (userRepository.findByEmail(email) != null) {
             throw new IllegalArgumentException("Пользователь с таким email уже существует");
         }
-
+        user.setNumberPhoneException(numberPhone);
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(Role.ROLE_USER);

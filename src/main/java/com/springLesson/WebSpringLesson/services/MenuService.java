@@ -20,15 +20,16 @@ public class MenuService {
     @Autowired
     private MenuRepository menuRepository;
 
+    @Transactional
     public Menu saveMenu(Menu menu) {
         return menuRepository.save(menu);
     }
 
     public List<Menu> findAllMenu() {return menuRepository.findAll();}
 
+    @Transactional
     public void delete(Long foodID) {
-        Menu menu = menuRepository.findByFoodId(foodID);
-        menuRepository.delete(menu);
+        menuRepository.deleteById(Math.toIntExact(foodID));
     }
 
     public Optional<Menu> findOptionalByMenuId(Long foodId) {return menuRepository.findOptionalByFoodId(foodId);}
@@ -43,12 +44,12 @@ public class MenuService {
         if (menu == null) {
             menu = new Menu();
         }
-            menu.setName(menuEditRequest.getName());
-            menu.setCategory(menuEditRequest.getCategory());
-            menu.setDescription(menuEditRequest.getDescription());
-            menu.setPrice(menuEditRequest.getPrice());
-            menu.setRemainder(menuEditRequest.getRemainder());
-            menu.setVolume(menuEditRequest.getVolume());
-            saveMenu(menu);
+        menu.setName(menuEditRequest.getName());
+        menu.setCategory(menuEditRequest.getCategory());
+        menu.setDescription(menuEditRequest.getDescription());
+        menu.setPrice(menuEditRequest.getPrice());
+        menu.setRemainder(menuEditRequest.getRemainder());
+        menu.setVolume(menuEditRequest.getVolume());
+        saveMenu(menu);
     }
 }

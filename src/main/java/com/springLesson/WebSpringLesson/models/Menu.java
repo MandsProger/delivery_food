@@ -3,9 +3,14 @@ package com.springLesson.WebSpringLesson.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "menu", schema = "food")
+@Setter @Getter
 public class Menu {
 
     @Id
@@ -24,16 +29,16 @@ public class Menu {
 
     @Column(name = "name")
     @NotNull
-    @Pattern(regexp = "^[а-яА-Я]{1,50}$")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$")
     private String name;
 
     @Column(name = "category")
     @NotNull
-    @Pattern(regexp = "^[а-яА-Я]{1,50}$")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$")
     private String category;
 
     @Column(name = "description")
-    @Pattern(regexp = "^[а-яА-Я]{1,50}$")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$")
     private String description;
 
     @Column(name = "volume")
@@ -43,60 +48,32 @@ public class Menu {
     public Menu() {
     }
 
-    public long getFoodId() {
-        return foodId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Menu menu = (Menu) o;
+        return price == menu.price && remainder == menu.remainder && Objects.equals(foodId, menu.foodId)
+                && Objects.equals(name, menu.name) && Objects.equals(category, menu.category)
+                && Objects.equals(description, menu.description) && Objects.equals(volume, menu.volume);
     }
 
-    public void setFoodId(long foodId) {
-        this.foodId = foodId;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(foodId, price, remainder, name, category, description, volume);
     }
 
-    public int getPrice() {
-        return price;
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "foodId=" + foodId +
+                ", price=" + price +
+                ", remainder=" + remainder +
+                ", name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", description='" + description + '\'' +
+                ", volume='" + volume + '\'' +
+                '}';
     }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public int getRemainder() {
-        return remainder;
-    }
-
-    public void setRemainder(int remainder) {
-        this.remainder = remainder;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getVolume() {
-        return volume;
-    }
-
-    public void setVolume(String volume) {
-        this.volume = volume;
-    }
-
 }
