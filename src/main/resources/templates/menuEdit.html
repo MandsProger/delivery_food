@@ -12,12 +12,12 @@
         <h1>Редактирование блюд из меню</h1><br>
         <div th:each="el : ${menu}">
         <form method="post">
-            <input type="text" th:value="${el.name}" name="name" placeholder="Введите название блюда" class="form-control"><br>
-            <input type="text" th:value="${el.price}" name="price" placeholder="Введите цену блюда (руб)" class="form-control"><br>
-            <input type="text" th:value="${el.category}" name="category" placeholder="Введите категорю блюда" class="form-control"><br>
-            <input type="text" th:value="${el.remainder}" name="remainder" placeholder="Введите остаток блюд" class="form-control"><br>
+            <input type="text" th:value="${el.name}" name="name" placeholder="Введите название блюда" class="form-control" required><br>
+            <input type="text" th:value="${el.price}" name="price" placeholder="Введите цену блюда (руб)" class="form-control" required><br>
+            <input type="text" th:value="${el.category}" name="category" placeholder="Введите категорю блюда" class="form-control" required><br>
+            <input type="text" th:value="${el.remainder}" name="remainder" placeholder="Введите остаток блюд" class="form-control" required><br>
             <input type="text" th:value="${el.description}" name="description" placeholder="Введите описание блюда" class="form-control"><br>
-            <input type="text" th:value="${el.volume}" name="volume" placeholder="Введите объем блюда" class="form-control"><br>
+            <input type="text" th:value="${el.volume}" name="volume" placeholder="Введите объем блюда" class="form-control" required><br>
             <button type="submit" class="btn btn-success">Обновить</button>
         </form>
         </div>

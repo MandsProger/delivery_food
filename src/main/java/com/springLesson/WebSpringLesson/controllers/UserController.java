@@ -1,24 +1,17 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.User;
-import com.springLesson.WebSpringLesson.repo.UserRepository;
 import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.LocalDateTime;
-import java.time.Period;
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @GetMapping("/login")
     public String login() {
@@ -31,20 +24,13 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String createUser(User user, Model model,
-                            @RequestParam String numberPhone) {
-        String cleanPhone = cleanPhoneNumber(numberPhone);
-        if (!userService.creatUser(user)) {
-            model.addAttribute("errorMessage", "Пользователь уже сущетсвует");
+    public String createUser(User user, Model model) {
+        try {
+            userService.createUser(user);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
             return "registration";
         }
-        userRepository.save(user);
-
         return "redirect:/login";
     }
-
-    private String cleanPhoneNumber(String phone) {
-        return phone.replaceAll("[^\\d]", ""); // Удаляем все нецифровые символы
-    }
-
 }

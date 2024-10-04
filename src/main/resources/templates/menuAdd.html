@@ -11,12 +11,12 @@
     <div class="container mt-5 mb-5">
         <h1>Добавление блюда в меню</h1><br>
         <form action="/menu/add" method="post">
-            <input type="text" name="name" placeholder="Введите название блюда" class="form-control"><br>
-            <input type="text" name="price" placeholder="Введите цену блюда (руб)" class="form-control"><br>
-            <input type="text" name="category" placeholder="Введите категорю блюда" class="form-control"><br>
-            <input type="text" name="remainder" placeholder="Введите остаток блюд" class="form-control"><br>
+            <input type="text" name="name" placeholder="Введите название блюда" class="form-control" required><br>
+            <input type="text" name="price" placeholder="Введите цену блюда (руб)" class="form-control" required><br>
+            <input type="text" name="category" placeholder="Введите категорю блюда" class="form-control" required><br>
+            <input type="text" name="remainder" placeholder="Введите остаток блюд" class="form-control" required><br>
             <input type="text" name="description" placeholder="Введите описание блюда" class="form-control"><br>
-            <input type="text" name="volume" placeholder="Введите объем блюда" class="form-control"><br>
+            <input type="text" name="volume" placeholder="Введите объем блюда" class="form-control" required><br>
             <button type="submit" class="btn btn-success">Добавить блюдо</button>
         </form>
     </div>

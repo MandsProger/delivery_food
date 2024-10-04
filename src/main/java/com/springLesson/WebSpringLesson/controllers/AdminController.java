@@ -2,29 +2,24 @@ package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.models.enums.Role;
-import com.springLesson.WebSpringLesson.repo.UserRepository;
+import com.springLesson.WebSpringLesson.request.UserEditRequest;
 import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class AdminController {
     public final UserService userService;
-    public final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/admin/users")
     public String adminUser(Model model) {
@@ -53,36 +48,25 @@ public class AdminController {
         } else return "redirect:/admin/user";
 
         model.addAttribute("users", users);
-        model.addAttribute("roles", Role.values());
+        model.addAttribute("roles", user.getRoles().stream()
+                .map(Role::getAuthority)
+                .collect(Collectors.toSet()));
         return "/userEdit";
     }
 
     @PostMapping("/admin/users/edit/{numberPhone}")
     public String userEditUpdate(@PathVariable(value = "numberPhone")
-                                             Long numberPhone, Model model,
-                                 @RequestParam String name, @RequestParam String email,
-                                 @RequestParam int bonus, @RequestParam String password,
-                                 @RequestParam String gender, @RequestParam("roles") String[] roleNames) {
-
-        User user = userRepository.findByNumberPhone(numberPhone);
-        user.setName(name);
-        user.setEmail(email);
-        user.setBonus(bonus);
-        if (password != "") {
-            user.setPassword(passwordEncoder.encode(password));
-        }
-        user.setGender(gender);
-
-
-        Set<Role> roles = new HashSet<>();
-        for (String role : roleNames) {
-            roles.add(Role.valueOf(role));
-        }
-        user.setRoles(roles);
-
-
-        userRepository.save(user);
-
+                                             Long numberPhone,
+                                 @ModelAttribute UserEditRequest user) {
+        userService.userUpdate(numberPhone, user);
+        log.info("Пользователь {} изменен", user.getName());
         return "redirect:/admin/users";
     }
+
+    @PostMapping("/admin/users/remove/{numberPhone}")
+    public String userPostRemove(@PathVariable(value = "numberPhone") Long numberPhone) {
+        userService.delete(numberPhone);
+        return "redirect:/admin/users";
+    }
+
 }

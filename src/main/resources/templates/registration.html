@@ -17,19 +17,23 @@
             <input type="email" name="email" placeholder="email" class="form-control" required><br>
             <input type="password" name="password" placeholder="password" class="form-control"><br>
             <label>
-                <input type="radio" name="gender" value="male" required>
+                <input type="radio" name="gender" value="MALE" required>
                 Мужской
             </label>
             <br>
             <label>
-                <input type="radio" name="gender" value="female" required>
+                <input type="radio" name="gender" value="FEMALE" required>
                 Женский
             </label><br><br>
             <input type="hidden" name="_csrf" value="${_csrf.token}">
             <button type="submit" class="btn btn-success">Зарегистрироваться</button>
             <br><br>
-            <h2 style="color: red" th:text="${errorMessage}"/>
         </form>
+        <span th:if="${errorMessage ne null}">
+            <div th:fragment="error" id="error" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
+            </div>
+        </span>
     </div>
 </main>
 <div th:insert="~{blocks/footer :: footer}"></div>
@@ -38,7 +42,6 @@
        $(document).ready(function(){
          $('#phone').mask('79999999999');
        });
-     </script>
 </script>
 </body>
 </html>

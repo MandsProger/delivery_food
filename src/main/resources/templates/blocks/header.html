@@ -23,6 +23,9 @@
                                    class="text-white btn btn-success">Зарегестрироваться</a></li>
                         </ul>
                         <form action="/logout" method="post" th:if="${#authorization.expression('isAuthenticated()')}">
+                            <div th:if="${user != null}">
+                                <p>Welcome, <span th:text="${user}"></span>!</p>
+                            </div>
                             <input type="hidden" name="_csrf" value="${_csrf.token}">
                             <button type="submit" class="btn btn-success">Выйти</button>
                         </form>

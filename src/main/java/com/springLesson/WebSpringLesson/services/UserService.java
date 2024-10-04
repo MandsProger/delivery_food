@@ -3,10 +3,13 @@ package com.springLesson.WebSpringLesson.services;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.models.enums.Role;
 import com.springLesson.WebSpringLesson.repo.UserRepository;
+import com.springLesson.WebSpringLesson.request.UserEditRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 
@@ -17,22 +20,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public boolean creatUser(User user) {
-        String email = user.getEmail();
-        Long numberPhone = user.getNumberPhone();
-        if (userRepository.findByNumberPhone(numberPhone) != null) {
-            return false;
-        }
-        if (userRepository.findByEmail(email) != null) {
-            return false;
-        }
-        user.setActive(true);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add(Role.ROLE_USER);
-        log.info("Saving new User with email {}", email);
-        userRepository.save(user);
-        return true;
-    }
+    @Transactional
+    public User saveUser(User user){return userRepository.save(user);}
 
     public List<User> list() {
         return userRepository.findAll();
@@ -44,8 +33,14 @@ public class UserService {
 
     public User getUserByNumberPhone(Long numberPhone){return userRepository.findByNumberPhone(numberPhone);}
 
+    @Transactional
+    public void delete(Long foodID) {
+        userRepository.deleteById(foodID);
+    }
+
+    @Transactional
     public void banUser(Long numberPhone) {
-        User user = userRepository.findByNumberPhone(numberPhone);
+        User user = getUserByNumberPhone(numberPhone);
         if (user != null) {
             if (user.isActive()) {
                 user.setActive(false);
@@ -54,8 +49,47 @@ public class UserService {
                 user.setActive(true);
                 log.info("UnBan user with id = {}", user.getNumberPhone());
             }
-
         }
-        userRepository.save(user);
+        saveUser(user);
+    }
+
+    @Transactional
+    public void createUser(User user) {
+        String email = user.getEmail();
+        Long numberPhone = user.getNumberPhone();
+        if (userRepository.findByNumberPhone(numberPhone) != null) {
+            throw new IllegalArgumentException("Пользователь с таким номером уже существует");
+        }
+        if (userRepository.findByEmail(email) != null) {
+            throw new IllegalArgumentException("Пользователь с таким email уже существует");
+        }
+        user.setNumberPhoneException(numberPhone);
+        user.setActive(true);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.getRoles().add(Role.ROLE_USER);
+        log.info("Saving new User with email {}", email);
+        saveUser(user);
+    }
+
+    private Long cleanPhoneNumber(String phone) {
+        String phoneStr = phone.replaceAll("[^\\d]", "");
+        phoneStr = phoneStr.replaceAll("[()]|-", "");
+        return Long.parseLong(phoneStr);
+    }
+
+    @Transactional
+    public void userUpdate(Long numberPhone, UserEditRequest userEditRequest) {
+        User user = getUserByNumberPhone(numberPhone);
+        if (user != null) {
+            user.setName(userEditRequest.getName());
+            user.setEmail(userEditRequest.getEmail());
+            user.setBonus(userEditRequest.getBonus());
+            user.setGender(userEditRequest.getGender());
+            user.setRoles(userEditRequest.getRoles());
+            if (!userEditRequest.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userEditRequest.getPassword()));
+            }
+            saveUser(user);
+        }
     }
 }
