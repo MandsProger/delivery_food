@@ -29,16 +29,16 @@ public class Menu {
 
     @Column(name = "name")
     @NotNull
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я\s]{1,100}$")
     private String name;
 
     @Column(name = "category")
     @NotNull
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я\s]{1,100}$")
     private String category;
 
     @Column(name = "description")
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я\s]{0,250}$")
     private String description;
 
     @Column(name = "volume")

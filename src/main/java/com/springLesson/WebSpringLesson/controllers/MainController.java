@@ -1,5 +1,6 @@
 package com.springLesson.WebSpringLesson.controllers;
 
+import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -17,13 +18,13 @@ public class MainController {
     public String home(Model model) {
         model.addAttribute("title", "Главная страница");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        model.addAttribute("user", username);
+        User user = (User) authentication.getPrincipal();
+        model.addAttribute("user", user);
         return "home";
     }
 
     @GetMapping("/about")
-    public String about(Model model) {
+    public String about() {
         return "about";
     }
 
