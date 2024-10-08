@@ -2,7 +2,9 @@ package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.User;
+import com.springLesson.WebSpringLesson.request.OrderPayRequest;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
+import com.springLesson.WebSpringLesson.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -10,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -21,6 +24,9 @@ public class OrderController {
 
     @Autowired
     private final ContentOrderService contentOrderService;
+
+    @Autowired
+    private final OrderService orderService;
 
     @GetMapping("/order")
     public String order(Model model) {
@@ -35,6 +41,12 @@ public class OrderController {
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("sum", sum);
         return "order";
+    }
+
+    @PostMapping("/order/pay")
+    public String orderPay(@ModelAttribute OrderPayRequest payRequest) {
+        orderService.orderPay(payRequest);
+        return "redirect:/menu";
     }
 
     @PostMapping("/order/{id}/remove")

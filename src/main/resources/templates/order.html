@@ -38,29 +38,37 @@
             </ul>
         </div>
 
+
         <div class="payment" style="width: 400px; position: fixed; margin-top: 220px; margin-left: 800px;">
-            <h4>Способ оплаты</h4>
-            <select name="paymentMethod" class="mt-3 form-select">
-                <option value="CARD">Картой</option>
-                <option value="CASH">Наличные</option>
-            </select><br>
-            <h4>Цена</h4>
-            <h5 style="display: flex; justify-content: space-between;">
-                <span th:text="'Товары в заказе'"></span>
-                <span th:text="${sum} + ' руб.'"></span>
-            </h5>
-            <h5 style="display: flex; justify-content: space-between;">
-                <span th:text="'Доставка'"></span>
-                <span th:text="'149.0 руб.'"></span>
-            </h5>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="flex-grow: 1;">
+            <form method="post" action="/order/pay" style="flex-grow: 1;">
+                <h4>Способ оплаты</h4>
+                <select name="paymentMethod" class="mt-3 form-select">
+                    <option value="CARD">Картой курьеру</option>
+                    <option value="CASH">Наличные</option>
+                </select><br>
+                <h4>Цена</h4>
+                <h5 style="display: flex; justify-content: space-between;">
+                    <span th:text="'Товары в заказе'"></span>
+                    <span th:text="${sum} + ' руб.'"></span>
+                </h5>
+                <h5 style="display: flex; justify-content: space-between;">
+                    <span th:text="'Доставка'"></span>
+                    <span th:text="'149.0 руб.'"></span>
+                </h5>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+
                     <input type="hidden" name="_csrf" value="${_csrf.token}">
-                    <button type="submit" class="btn btn-success mt-3" style="width: 90%;">Оплатить</button>
+                    <button type="submit" class="btn btn-success mt-3" style="width: 65%;">Оплатить</button>
+
+                    <input type="hidden" name="resultPrice" th:value="${sum + 149}">
+                    <input type="hidden" name="userId" th:value="${user.getNumberPhone()}">
+                    <input type="hidden" name="costDelivery" th:value="149">
+
+                    <h5 style="margin-top: 20px;" name="feedback" th:text="${sum + 149} + ' руб.'"></h5>
                 </div>
-                <h5 style="margin-left: 20px;" th:text="${sum + 149} + ' руб.'"></h5>
-            </div>
+            </form>
         </div>
+
     </div>
 </main>
 <div th:insert="~{blocks/footer :: footer}"></div>
