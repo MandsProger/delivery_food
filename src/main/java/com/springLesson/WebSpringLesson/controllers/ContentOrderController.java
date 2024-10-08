@@ -37,6 +37,7 @@ public class ContentOrderController {
         User user = (User) authentication.getPrincipal();
 
         List<ContentOrder> cartItems = contentOrderService.getUserCart(user.getNumberPhone());
+        model.addAttribute("user", user);
         model.addAttribute("cartItems", cartItems);
 
         return "contentOrder";

@@ -6,21 +6,65 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <header th:insert="~{blocks/header :: header}"></header>
-    <main>
-        <div class="container mt-5">
-            <h1>Меню</h1>
-            <div th:each="el : ${menus}" class="alert, alert-info, mt-2">
-                <h3 th:text="${el.name}"/>
-                <p th:text="${el.price} + ' руб.'"></p>
+<header th:insert="~{blocks/header :: header}"></header>
+<main>
+    <div class="container mt-5">
+        <h1>Меню</h1><br><br>
+        <div class="row">
+            <div th:each="el, stat : ${menus}" class="col-4 text-center mb-4" th:if="${el.remainder} > 0">
+                <h3 th:text="${el.name}"></h3>
+                <p th:text="${el.description}"></p>
+                <h4 th:text="${el.price} + ' руб.'"></h4>
+                <form th:action="'/menu/' + ${el.foodId} + '/buy'" method="post" class="d-flex mt-2 mb-4 justify-content-center">
+                    <div class="input-group" style="width:130px">
+                        <button type="button" class="btn btn-outline-secondary decrement-btn">-</button>
+                        <input type="number" name="count" value="1"
+                               min="1" th:max="${el.remainder}" class="form-control text-center" style="width: 60px;" />
+                        <button type="button" class="btn btn-outline-secondary increment-btn">+</button>
+                    </div>
+                    <input type="hidden" name="action" value="buy"/>
+                    <button type="submit" class="btn btn-primary ms-2">Купить</button>
+                </form>
+
+                <div th:if="${isBuyClicked}">
+                    <p>Количество блюд: <span th:text="${contentOrder.count}">0</span></p>
+                </div>
                 <a th:href="'/menu/' + ${el.foodId}" class="btn btn-warning">Подробнее</a>
-            </div><br>
-            <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
-               href="/menu/add" class="btn btn-success">Добавить блюдо в меню
-            </a>
+            </div>
         </div>
-    </main>
-    <div th:insert="~{blocks/footer :: footer}"></div>
+        <br>
+        <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+           href="/menu/add" class="btn btn-success">Добавить блюдо в меню
+        </a>
+    </div>
+</main>
+<div th:insert="~{blocks/footer :: footer}"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const containers = document.querySelectorAll('.input-group');
+
+        containers.forEach(container => {
+            const input = container.querySelector('input[type="number"]');
+            const incrementButton = container.querySelector('.increment-btn');
+            const decrementButton = container.querySelector('.decrement-btn');
+            const maxRemainder = parseInt(input.getAttribute('max'), 10); // Получаем значение максимального остатка
+
+            incrementButton.addEventListener('click', function () {
+                let currentValue = parseInt(input.value, 10);
+                if (currentValue < maxRemainder) {
+                    input.value = currentValue + 1;
+                }
+            });
+
+            decrementButton.addEventListener('click', function () {
+                let currentValue = parseInt(input.value, 10);
+                if (currentValue > 1) {
+                    input.value = currentValue - 1;
+                }
+            });
+        });
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>

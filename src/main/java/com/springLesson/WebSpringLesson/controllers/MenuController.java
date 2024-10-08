@@ -79,12 +79,6 @@ public class MenuController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        if ("increase".equals(action)) {
-            count++;
-        } else if ("decrease".equals(action)) {
-            count = Math.max(1, count - 1);
-        }
-
         contentOrderService.addProductToCart(foodId, count, user.getNumberPhone());
         return "redirect:/menu";
     }

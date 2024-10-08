@@ -9,15 +9,15 @@
 <header th:insert="~{blocks/header :: header}"></header>
 <main>
     <div class="container mt-5">
-        <h2>Ваша корзина</h2>
+        <h2 th:text="'Ваша корзинна ' + ${user.name}"></h2>
 
         <div>
             <div th:if="${cartItems.size() > 0}">
                 <ul class="list-group">
                     <li th:each="item : ${cartItems}" class="list-group-item">
-                        <span th:text="${item.foodName}">Название блюда</span> -
-                        <span th:text="${item.count}">Количество</span> -
-                        <span th:text="${item.price}">Цена</span>
+                        <h4 th:text="${item.foodName}"></h4>
+                        <h5 th:text="${item.count} + ' шт.'"></h5>
+                        <h4 th:text="${item.price} + ' руб.'"></h4>
                     </li>
                 </ul>
             </div>
