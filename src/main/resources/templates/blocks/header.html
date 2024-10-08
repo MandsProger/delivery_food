@@ -12,6 +12,7 @@
                         <ul class="list-unstyled">
                             <li><a href="/" class="text-white btn btn-dark">Главная</a></li>
                             <li><a href="/menu" class="text-white btn btn-dark">Меню</a></li>
+                            <li><a href="/contentOrder" class="text-white btn btn-dark">Корзина</a></li>
                             <li><a href="/about" class="text-white btn btn-dark">О нас</a></li>
                             <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                                 <a href="/admin" class="text-white btn btn-dark">Админ панель</a>
@@ -24,7 +25,7 @@
                         </ul>
                         <form action="/logout" method="post" th:if="${#authorization.expression('isAuthenticated()')}">
                             <div th:if="${user != null}">
-                                <p>Welcome, <span th:text="${user}"></span>!</p>
+                                <p>Welcome, <span th:text="${user.getName()}"></span>!</p>
                             </div>
                             <input type="hidden" name="_csrf" value="${_csrf.token}">
                             <button type="submit" class="btn btn-success">Выйти</button>

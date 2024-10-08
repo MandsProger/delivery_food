@@ -28,7 +28,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String adminPanel(Model model) {
+    public String adminPanel() {
         return "adminPanel";
     }
 

@@ -26,7 +26,7 @@ public class User implements UserDetails{
 
     @Column(name = "name")
     @NotNull
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я]{1,50}$", message = "Имя должно быть только на англ. и русском языке и без цифр")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я\s]{1,50}$", message = "Имя должно быть только на англ. и русском языке и без цифр")
     private String name;
 
     @Column(name = "gender")
