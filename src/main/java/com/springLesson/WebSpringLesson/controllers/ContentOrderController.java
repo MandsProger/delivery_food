@@ -14,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -35,11 +37,21 @@ public class ContentOrderController {
     public String contentOrderUser(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-
         List<ContentOrder> cartItems = contentOrderService.getUserCart(user.getNumberPhone());
+        float sum = 0;
+        for (ContentOrder item : cartItems) {
+            sum += item.getPrice();
+        }
         model.addAttribute("user", user);
         model.addAttribute("cartItems", cartItems);
+        model.addAttribute("sum", sum);
 
         return "contentOrder";
+    }
+
+    @PostMapping("/contentOrder/{id}/remove")
+    public String contentOrderRemoveProduct(@PathVariable(value = "id") Long id) {
+        contentOrderService.contentOrderDelete(id);
+        return "redirect:/contentOrder";
     }
 }

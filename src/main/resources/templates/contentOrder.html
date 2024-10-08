@@ -18,8 +18,14 @@
                         <h4 th:text="${item.foodName}"></h4>
                         <h5 th:text="${item.count} + ' шт.'"></h5>
                         <h4 th:text="${item.price} + ' руб.'"></h4>
+                        <form th:action="'/contentOrder/' + ${item.id} + '/remove'" method="post">
+                            <button class="btn btn-warning" type="submit">Удалить</button>
+                        </form>
                     </li>
                 </ul>
+            </div>
+            <div class="container m-5">
+                <h4>Общая сумма: <span th:text="${sum} + 'руб.'"></span></h4>
             </div>
             <div th:if="${cartItems.size() == 0}">
                 <p>Ваша корзина пуста.</p>

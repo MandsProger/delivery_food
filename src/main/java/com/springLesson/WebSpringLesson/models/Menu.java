@@ -21,7 +21,7 @@ public class Menu {
 
     @Column(name = "price")
     @NotNull
-    private int price;
+    private float price;
 
     @Column(name = "remainder")
     @NotNull

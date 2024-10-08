@@ -35,7 +35,17 @@ public class ContentOrderService {
         menuRepository.save(menu);
     }
 
-    public List<ContentOrder> getUserCart(Long userId) {
-        return contentOrderRepository.findAllByUserId(userId);
+    public List<ContentOrder> getUserCart(Long numberPhone) {
+        return contentOrderRepository.findAllByUserId(numberPhone);
     }
+
+    public ContentOrder getUserById(Long id) {
+        return contentOrderRepository.findByUserId(id);
+    }
+
+    @Transactional
+    public void contentOrderDelete(Long id) {
+        contentOrderRepository.deleteById(id);
+    }
+
 }

@@ -19,15 +19,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ContentOrderRepository contentOrderRepository;
 
-    /*private Order createNewOrder(Long userId) {
-        Order order = new Order();
-        order.setUserId(userId);
-        order.setDateOrder(LocalDateTime.now());
-        order.setPaid(false);
-        order.setNumberOrder(1);
-        return orderRepository.save(order);
-    }*/
-
     public Order getCurrentOrder(Long userId) {
         return orderRepository.findByUserIdAndIsPaidFalse(userId);
     }

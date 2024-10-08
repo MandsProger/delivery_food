@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ContentOrderRepository extends JpaRepository<ContentOrder, Long> {
     List<ContentOrder> findAllByUserId(Long userId);
+    ContentOrder findByUserId(Long id);
 }
