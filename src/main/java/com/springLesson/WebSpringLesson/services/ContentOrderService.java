@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +44,12 @@ public class ContentOrderService {
         return contentOrderRepository.findByUserId(id);
     }
 
-    @Transactional
+
     public void contentOrderDelete(Long id) {
+        Optional<ContentOrder> contentOrder = contentOrderRepository.findById(id);
+        ContentOrder contentOrder1 = contentOrder.get();
+        Menu menu = menuRepository.findByName(contentOrder1.getFoodName());
+        menu.setRemainder(menu.getRemainder() + contentOrder1.getCount());
         contentOrderRepository.deleteById(id);
     }
 

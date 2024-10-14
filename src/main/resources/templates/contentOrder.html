@@ -9,7 +9,7 @@
 <header th:insert="~{blocks/header :: header}"></header>
 <main>
     <div class="container mt-5">
-        <h2 th:text="'Ваша корзинна ' + ${user.name}"></h2>
+        <h2 th:text="'Ваша корзинна, ' + ${user.name}"></h2>
 
         <div>
             <div th:if="${cartItems.size() > 0}">
@@ -24,11 +24,11 @@
                     </li>
                 </ul>
             </div>
-            <div class="container m-5">
+            <div class="container m-5" th:if="${cartItems.size() > 0}">
                 <h4>Общая сумма: <span th:text="${sum} + 'руб.'"></span></h4>
             </div>
             <div th:if="${cartItems.size() == 0}">
-                <p>Ваша корзина пуста.</p>
+                <h4>Ваша корзина пуста.</h4>
             </div>
         </div>
     </div>
