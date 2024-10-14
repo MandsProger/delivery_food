@@ -13,7 +13,7 @@ public class MenuEditRequest {
     private long foodId;
 
     @NotNull
-    private int price;
+    private float price;
 
     @NotNull
     private int remainder;
