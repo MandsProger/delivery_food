@@ -1,49 +1,43 @@
 <div th:fragment="header" xmlns:th="http://www.thymeleaf.org">
     <header data-bs-theme="dark">
-        <div class="text-bg-dark collapse show" id="navbarHeader" style="">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-8 col-md-7 py-4">
-                        <h4>About</h4>
-                        <p class="text-body-secondary">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+        <nav class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="container d-flex justify-content-start"> <!-- Изменил justify-content на start -->
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2"
+                         viewBox="0 0 24 24">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                    <strong>Album</strong>
+                </a>
+                <div class="d-flex justify-content-between align-items-center flex-grow-1"> <!-- Добавили flex-grow-1 для равного распределения пространства -->
+                    <div class="me-auto">
+                        <a href="/" class="text-white btn btn-dark me-2">Главная</a>
+                        <a href="/menu" class="text-white btn btn-dark me-2">Меню</a>
+                        <a href="/contentOrder" class="text-white btn btn-dark me-2">Корзина</a>
+                        <a href="/about" class="text-white btn btn-dark me-2">О нас</a>
+                        <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                            <a href="/admin" class="text-white btn btn-dark me-2">Админ панель</a>
+                        </div>
                     </div>
-                    <div class="col-sm-4 offset-md-1 py-4">
-                        <h4>Contact</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="/" class="text-white btn btn-dark">Главная</a></li>
-                            <li><a href="/menu" class="text-white btn btn-dark">Меню</a></li>
-                            <li><a href="/contentOrder" class="text-white btn btn-dark">Корзина</a></li>
-                            <li><a href="/about" class="text-white btn btn-dark">О нас</a></li>
-                            <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-                                <a href="/admin" class="text-white btn btn-dark">Админ панель</a>
-                            </li>
-                            <br>
-                            <li><a href="/login" th:if="${#authorization.expression('!isAuthenticated()')}"
-                                   class="text-white btn btn-success mb-1">Войти</a></li>
-                            <li><a href="/registration" th:if="${#authorization.expression('!isAuthenticated()')}"
-                                   class="text-white btn btn-success">Зарегестрироваться</a></li>
-                        </ul>
-                        <form action="/logout" method="post" th:if="${#authorization.expression('isAuthenticated()')}">
-                            <div th:if="${user != null}">
-                                <p>Welcome, <span th:text="${user.getName()}"></span>!</p>
+                    <div class="d-flex align-items-center">
+                        <div th:if="${#authorization.expression('!isAuthenticated()')}" class="d-flex align-items-center">
+                            <a href="/login" class="text-white btn btn-success me-2">Войти</a>
+                            <a href="/registration" class="text-white btn btn-success">Зарегистрироваться</a>
+                        </div>
+                        <div th:if="${#authorization.expression('isAuthenticated()')}" class="d-flex align-items-center">
+                            <div th:if="${currentUri == '/'}">
+                                <span class="text-white me-2" th:text="'Привет, ' + ${user.name}"></span>
                             </div>
-                            <input type="hidden" name="_csrf" value="${_csrf.token}">
-                            <button type="submit" class="btn btn-success">Выйти</button>
-                        </form>
+                            <form action="/logout" method="post" class="d-inline">
+                                <input type="hidden" name="_csrf" value="${_csrf.token}">
+                                <button type="submit" class="btn btn-success">Выйти</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="navbar navbar-dark bg-dark shadow-sm">
-            <div class="container">
-                <a href="#" class="navbar-brand d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                    <strong>Album</strong>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="true" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </div>
+        </nav>
     </header>
 </div>

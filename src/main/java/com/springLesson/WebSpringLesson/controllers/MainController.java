@@ -2,6 +2,7 @@ package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,11 +16,17 @@ public class MainController {
     public final UserService userService;
 
     @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("title", "Главная страница");
+    public String home(Model model, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        model.addAttribute("user", user);
+
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+            User user = (User) authentication.getPrincipal();
+            model.addAttribute("user", user);
+        } else {
+            model.addAttribute("user", null);
+        }
+        model.addAttribute("currentUri", request.getRequestURI());
+
         return "home";
     }
 

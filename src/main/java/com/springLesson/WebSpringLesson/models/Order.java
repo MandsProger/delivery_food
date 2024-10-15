@@ -26,10 +26,6 @@ public class Order {
     @NotNull
     private Long userId;
 
-    @Column(name = "number_order")
-    @NotNull
-    private int numberOrder;
-
     @Column(nullable = false, updatable = false, name = "date_order")
     @NotNull
     private LocalDateTime dateOrder;
@@ -63,9 +59,4 @@ public class Order {
     @Column(name = "order_address")
     @NotNull
     private String orderAddress;
-
-    public void addContentOrder(ContentOrder contentOrder) {
-        contentOrders.add(contentOrder);
-        resultPrice += contentOrder.getPrice() * contentOrder.getCount();
-    }
 }

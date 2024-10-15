@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ваша заказ</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="~{blocks/header :: header}"></header>
+<main>
+    <div class="container mt-5" style="display: flex;">
+        <div class="address" style="width: 600px; margin-right: 20px;">
+            <h4>Адрес доставки</h4><br>
+            <div class="form-row mb-2 d-flex">
+                <input type="text" name="apartment" placeholder="кв./дом" class="form-control" required>
+                <input type="text" name="intercom" placeholder="домофон" class="form-control">
+                <input type="text" name="porch" placeholder="подъезд" class="form-control">
+                <input type="text" name="floor" placeholder="этаж" class="form-control">
+            </div>
+            <div class="form-row mb-4">
+                <input type="text" name="comment" placeholder="Комментарий к заказу" class="form-control">
+            </div>
+            <h4>Время доставки</h4>
+            <h5>Доставка + TIME</h5>
+        </div>
+
+        <div class="contentOrder" style="width: 600px; margin-top: 300px; margin-left: -620px;">
+            <h4>Ваш заказ</h4><br>
+            <ul class="list-group">
+                <li th:each="item : ${cartItems}" class="list-group-item">
+                    <h4 th:text="${item.foodName}"></h4>
+                    <h5 th:text="${item.count} + ' шт.'"></h5>
+                    <h4 th:text="${item.price} + ' руб.'"></h4>
+                    <form th:action="'/order/' + ${item.id} + '/remove'" method="post">
+                        <button class="btn btn-warning" type="submit">Удалить</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <div class="payment" style="width: 400px; position: fixed; margin-top: 220px; margin-left: 800px;">
+            <h4>Способ оплаты</h4>
+            <select name="paymentMethod" class="mt-3 form-select">
+                <option value="CARD">Картой</option>
+                <option value="CASH">Наличные</option>
+            </select><br>
+            <h4>Цена</h4>
+            <h5 style="display: flex; justify-content: space-between;">
+                <span th:text="'Товары в заказе'"></span>
+                <span th:text="${sum} + ' руб.'"></span>
+            </h5>
+            <h5 style="display: flex; justify-content: space-between;">
+                <span th:text="'Доставка'"></span>
+                <span th:text="'149.0 руб.'"></span>
+            </h5>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex-grow: 1;">
+                    <input type="hidden" name="_csrf" value="${_csrf.token}">
+                    <button type="submit" class="btn btn-success mt-3" style="width: 90%;">Оплатить</button>
+                </div>
+                <h5 style="margin-left: 20px;" th:text="${sum + 149} + ' руб.'"></h5>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:insert="~{blocks/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
