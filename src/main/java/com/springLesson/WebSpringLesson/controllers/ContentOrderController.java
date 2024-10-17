@@ -1,7 +1,6 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
-import com.springLesson.WebSpringLesson.models.Order;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
 import com.springLesson.WebSpringLesson.services.OrderService;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
+import java.util.Set;
 
 @Controller
 @Slf4j
@@ -37,7 +36,7 @@ public class ContentOrderController {
     public String contentOrderUser(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        List<ContentOrder> cartItems = contentOrderService.getUserCart(user.getNumberPhone());
+        Set<ContentOrder> cartItems = contentOrderService.getUserCart(user.getNumberPhone());
         float sum = 0;
         for (ContentOrder item : cartItems) {
             sum += item.getPrice();

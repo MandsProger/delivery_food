@@ -4,12 +4,13 @@ import com.springLesson.WebSpringLesson.models.ContentOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface ContentOrderRepository extends JpaRepository<ContentOrder, Long> {
-    List<ContentOrder> findAllByUserId(Long userId);
+    Set<ContentOrder> findAllByUserId(Long userId);
     ContentOrder findByUserId(Long userId);
     Optional<ContentOrder> findById(Long id);
+    Set<ContentOrder> findAllByUserIdAndOrderIdIsNull(Long userId);
 }

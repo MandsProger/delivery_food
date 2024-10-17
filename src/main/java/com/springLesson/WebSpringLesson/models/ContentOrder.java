@@ -32,4 +32,9 @@ public class ContentOrder {
     @NotNull
     @Column(name = "user_id")
     private Long userId;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
 }

@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -36,15 +36,15 @@ public class ContentOrderService {
         menuRepository.save(menu);
     }
 
-    public List<ContentOrder> getUserCart(Long numberPhone) {
-        return contentOrderRepository.findAllByUserId(numberPhone);
+    public Set<ContentOrder> getUserCart(Long numberPhone) {
+        return contentOrderRepository.findAllByUserIdAndOrderIdIsNull(numberPhone);
     }
 
     public ContentOrder getUserById(Long id) {
         return contentOrderRepository.findByUserId(id);
     }
 
-
+    @Transactional
     public void contentOrderDelete(Long id) {
         Optional<ContentOrder> contentOrder = contentOrderRepository.findById(id);
         ContentOrder contentOrder1 = contentOrder.get();

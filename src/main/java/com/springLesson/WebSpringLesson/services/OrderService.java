@@ -10,8 +10,9 @@ import com.springLesson.WebSpringLesson.request.OrderPayRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -25,18 +26,21 @@ public class OrderService {
         return orderRepository.findByUserIdAndIsPaidFalse(userId);
     }
 
+    @Transactional
     public Order saveOrder(Order order) {
        return orderRepository.save(order);
     }
 
-    public void orderPay(OrderPayRequest orderPayRequest/*, Long userId*/) {
+    @Transactional
+    public void orderPay(OrderPayRequest orderPayRequest) {
         Order order = new Order();
-        //ContentOrder contentOrder = contentOrderRepository.findAllByUserIdAndOrderIdNull(userId);
-
         order.setResultPrice(orderPayRequest.getResultPrice());
         order.setUserId(orderPayRequest.getUserId());
         order.setCostDelivery(orderPayRequest.getCostDelivery());
         order.setPaymentMethod(orderPayRequest.getPaymentMethod());
+        order.setOrderAddress(orderPayRequest.getOrderAddress());
+        Set<ContentOrder> contentOrder = contentOrderRepository.findAllByUserIdAndOrderIdIsNull(orderPayRequest.getUserId());
+        order.setContentOrders(contentOrder);
 
         saveOrder(order);
     }

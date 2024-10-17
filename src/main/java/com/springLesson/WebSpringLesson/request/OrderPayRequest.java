@@ -39,4 +39,5 @@ public class OrderPayRequest {
 
     //@NotNull
     private String orderAddress;
+    private AddressRequest address;
 }

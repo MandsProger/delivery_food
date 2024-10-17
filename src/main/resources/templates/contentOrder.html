@@ -29,7 +29,7 @@
             <h4>Ваша корзина пуста.</h4>
         </div>
         <br>
-        <a th:href="'/order'" class="btn btn-success">Оформить заказ</a>
+        <a th:href="'/order'" class="btn btn-success" th:if="${cartItems.size() != 0}">Оформить заказ</a>
     </div>
 </main>
 <div th:insert="~{blocks/footer :: footer}"></div>
