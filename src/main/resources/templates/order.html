@@ -29,14 +29,14 @@
             <h4>Адрес доставки</h4><br>
             <div id="map"></div>
             <div class="form-row mb-4">
-                <input type="text" name="street" placeholder="Улица" class="form-control mb-1" style="width: 200px;" required readonly>
-                <input type="text" name="house" placeholder="Дом" class="form-control" style="width: 100px;" required readonly>
+                <input type="text" name="street" placeholder="Улица" class="form-control mb-1" style="width: 250px;" required>
+                <input type="text" name="house" placeholder="Дом" class="form-control" style="width: 100px;" required>
             </div>
             <div class="form-row mb-2 d-flex">
                 <input type="text" name="apartment" placeholder="кв./дом" class="form-control" required>
                 <input type="text" name="intercom" placeholder="домофон" class="form-control">
                 <input type="text" name="porch" placeholder="подъезд" class="form-control">
-                <input type="text" name="floor" placeholder="этаж" class="form-control">
+                <input type="text" name="floor" placeholder="этаж" class="form-control" required>
             </div>
             <div class="form-row mb-4">
                 <input type="text" name="comment" placeholder="Комментарий к заказу" class="form-control">
@@ -96,41 +96,36 @@
         // Инициализация карты и маркера
         ymaps.ready(() => {
             map = new ymaps.Map("map", {
-                center: [55.751244, 37.618423], // Начальные координаты (Москва, можете изменить на ваши)
+                center: [55.751244, 37.618423], // Начальные координаты (Москва)
                 zoom: 12,
-                controls: ['smallMapDefaultSet'], // Опции управления
-                behaviors: ['default', 'scrollZoom'] // Поведение карты
+                controls: ['smallMapDefaultSet'],
+                behaviors: ['default', 'scrollZoom']
             });
 
-            // Создается маркер
             marker = new ymaps.Placemark(map.getCenter(), {
                 hintContent: 'Выберите адрес',
                 balloonContent: 'Вы здесь'
             }, {
                 preset: 'islands#icon',
-                iconColor: '#0095b6' // Цвет маркера
+                iconColor: '#0095b6'
             });
 
-            // Добавление маркера на карту
             map.geoObjects.add(marker);
 
-            // Обработчик клика на карту
             map.events.add('click', e => {
-                const coords = e.get('coords'); // Получаем координаты щелчка
-                marker.geometry.coordinates = coords; // Устанавливаем новые координаты для маркера
-                getAddress(coords); // Запрашиваем адрес по координатам
+                const coords = e.get('coords');
+                marker.geometry.coordinates = coords;
+                getAddress(coords);
             });
         });
 
-        // Получение адреса по координатам
         function getAddress(coords) {
             ymaps.geocode(coords).then(res => {
-                const address = res.geoObjects.get(0).properties.get('name'); // Извлекаем адрес
-                fillAddressFields(address.split(', ')); // Заполняем поля адресами
+                const address = res.geoObjects.get(0).properties.get('name');
+                fillAddressFields(address.split(', '));
             }).catch(err => alert("Не удалось получить адрес: " + err));
         }
 
-        // Заполнение полей формы на основе адреса
         function fillAddressFields(components) {
             const [street, house] = components;
             document.querySelector("input[name='street']").value = street || '';
@@ -139,8 +134,19 @@
 
         // Обработка отправки формы
         document.querySelector("#paymentForm").addEventListener("submit", event => {
-            const addressFields = ["street", "house", "apartment", "intercom", "porch", "floor"];
+            const street = document.querySelector("input[name='street']").value;
+            const house = document.querySelector("input[name='house']").value;
+            const apartment = document.querySelector("input[name='apartment']").value;
+            const floor = document.querySelector("input[name='floor']").value;
 
+            // Проверка на заполненность обязательных полей
+            if (!street || !house || !apartment || !floor) {
+                event.preventDefault(); // Остановить отправку формы
+                alert("Пожалуйста, заполните обязательные поля адреса: Улица, Дом, Квартира и Этаж."); // Уведомление для пользователя
+                return; // Выход из функции
+            }
+
+            const addressFields = ["street", "house", "apartment", "intercom", "porch", "floor"];
             addressFields.forEach(field => {
                 let value = document.querySelector(`input[name='${field}']`).value;
                 let hiddenField = document.createElement("input");

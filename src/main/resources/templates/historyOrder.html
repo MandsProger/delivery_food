@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>История заказов</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="~{blocks/header :: header}"></header>
+<main>
+    <div class="container mt-5 mb-5">
+        <div class="contentOrder" style="width: 600px;">
+            <h4>Ваши покупки</h4><br>
+            <ul class="list-group">
+                <li th:each="item : ${orderItems}" class="list-group-item" style="margin-bottom: 15px;">
+                    <h4 th:text="'Заказ №' + ${item.id}"></h4>
+                    <h4 th:text="'Сумма: ' + ${item.resultPrice + ' руб.'}"></h4>
+                </li>
+            </ul>
+        </div>
+    </div>
+</main>
+<div th:insert="~{blocks/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+</html>

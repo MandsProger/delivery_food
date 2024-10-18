@@ -24,13 +24,7 @@ import java.util.Set;
 public class ContentOrderController {
 
     @Autowired
-    private final UserService userService;
-
-    @Autowired
     private final ContentOrderService contentOrderService;
-
-    @Autowired
-    private final OrderService orderService;
 
     @GetMapping("/contentOrder")
     public String contentOrderUser(Model model) {

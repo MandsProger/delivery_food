@@ -22,10 +22,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ContentOrderRepository contentOrderRepository;
 
-    public Order getCurrentOrder(Long userId) {
-        return orderRepository.findByUserIdAndIsPaidFalse(userId);
-    }
-
     @Transactional
     public Order saveOrder(Order order) {
        return orderRepository.save(order);
