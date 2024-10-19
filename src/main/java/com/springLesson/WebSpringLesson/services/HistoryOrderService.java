@@ -21,6 +21,10 @@ public class HistoryOrderService {
         return orderRepository.findAllIdByUserIdAndIsPaidFalse(numberPhone);
     }
 
+    public List<Order> getHistory(Long numberPhone) {
+        return orderRepository.findAllIdByUserId(numberPhone);
+    }
+
     public List<Order> getHistoryArchiveCart(Long numberPhone) {
         return orderRepository.findAllIdByUserIdAndIsPaidTrue(numberPhone);
     }

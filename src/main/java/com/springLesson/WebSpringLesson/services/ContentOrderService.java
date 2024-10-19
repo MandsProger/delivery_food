@@ -19,6 +19,11 @@ public class ContentOrderService {
     private final ContentOrderRepository contentOrderRepository;
 
     @Transactional
+    public ContentOrder saveContentOrder(ContentOrder contentOrder){
+        return contentOrderRepository.save(contentOrder);
+    }
+
+    @Transactional
     public void addProductToCart(Long foodId, int count, Long numberPhone) {
         Menu menu = menuRepository.findByFoodId(foodId);
         if (menu.getRemainder() < count) {
@@ -31,7 +36,7 @@ public class ContentOrderService {
         contentOrder.setPrice(menu.getPrice() * count);
         contentOrder.setUserId(numberPhone);
 
-        contentOrderRepository.save(contentOrder);
+        saveContentOrder(contentOrder);
         menu.setRemainder(menu.getRemainder() - count);
         menuRepository.save(menu);
     }

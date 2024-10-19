@@ -6,6 +6,7 @@ import com.springLesson.WebSpringLesson.request.UserEditRequest;
 import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class AdminController {
+
+    @Autowired
     public final UserService userService;
 
     @GetMapping("/admin/users")

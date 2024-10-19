@@ -3,6 +3,7 @@ package com.springLesson.WebSpringLesson.controllers;
 import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
+import com.springLesson.WebSpringLesson.services.MenuService;
 import com.springLesson.WebSpringLesson.services.OrderService;
 import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -25,6 +27,9 @@ public class ContentOrderController {
 
     @Autowired
     private final ContentOrderService contentOrderService;
+
+    @Autowired
+    private final MenuService menuService;
 
     @GetMapping("/contentOrder")
     public String contentOrderUser(Model model) {
