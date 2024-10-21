@@ -35,7 +35,7 @@ public class ContentOrderController {
     public String contentOrderUser(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Set<ContentOrder> cartItems = contentOrderService.getUserCart(user.getNumberPhone());
+        Set<ContentOrder> cartItems = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
         float sum = 0;
         for (ContentOrder item : cartItems) {
             sum += item.getPrice();

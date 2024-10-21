@@ -33,7 +33,7 @@ public class OrderController {
     public String order(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Set<ContentOrder> cartItems = contentOrderService.getUserCart(user.getNumberPhone());
+        Set<ContentOrder> cartItems = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
 
         if (cartItems.isEmpty()) {
             return "redirect:/contentOrder";

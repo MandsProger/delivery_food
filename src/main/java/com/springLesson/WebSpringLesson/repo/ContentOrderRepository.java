@@ -13,4 +13,5 @@ public interface ContentOrderRepository extends JpaRepository<ContentOrder, Long
     ContentOrder findByUserId(Long userId);
     Optional<ContentOrder> findById(Long id);
     Set<ContentOrder> findAllByUserIdAndOrderIdIsNull(Long userId);
+    Set<ContentOrder> findAllByOrderId(Long orderId);
 }

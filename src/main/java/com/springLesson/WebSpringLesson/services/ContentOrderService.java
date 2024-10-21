@@ -2,6 +2,7 @@ package com.springLesson.WebSpringLesson.services;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.Menu;
+import com.springLesson.WebSpringLesson.models.Order;
 import com.springLesson.WebSpringLesson.repo.ContentOrderRepository;
 import com.springLesson.WebSpringLesson.repo.MenuRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +42,15 @@ public class ContentOrderService {
         menuRepository.save(menu);
     }
 
-    public Set<ContentOrder> getUserCart(Long numberPhone) {
+    public Set<ContentOrder> getAllUserCartByNumberPhone(Long numberPhone) {
         return contentOrderRepository.findAllByUserIdAndOrderIdIsNull(numberPhone);
     }
 
     public ContentOrder getUserById(Long id) {
         return contentOrderRepository.findByUserId(id);
+    }
+    public Set<ContentOrder> getAllItemsByOrderId(Long orderId) {
+        return contentOrderRepository.findAllByOrderId(orderId);
     }
 
     @Transactional
