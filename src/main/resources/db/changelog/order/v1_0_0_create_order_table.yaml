@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-order-table
+      author: Mattew
+      changes:
+        - createTable:
+            tableName: order
+            schemaName: food
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_order
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: result_price
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_method
+                  type: ENUM('CARD', 'CASH')
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_paid
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_completion_time
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: cost_delivery
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: feedback
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: order_address
+                  type: varchar(255)
+                  constraints:
+                    nullable: false

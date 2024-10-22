@@ -3,9 +3,11 @@ package com.springLesson.WebSpringLesson.controllers;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.models.enums.Role;
 import com.springLesson.WebSpringLesson.request.UserEditRequest;
+import com.springLesson.WebSpringLesson.services.OrderService;
 import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,12 +21,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class AdminController {
+
+    @Autowired
     public final UserService userService;
+
+    @Autowired
+    public final OrderService orderService;
 
     @GetMapping("/admin/users")
     public String adminUser(Model model) {
         model.addAttribute("users", userService.list());
         return "adminUsersPanel";
+    }
+
+    @GetMapping("/admin/orderManagement")
+    public String orderManagement(Model model) {
+        model.addAttribute("orders", orderService.list());
+        return "orderManagement";
     }
 
     @GetMapping("/admin")
@@ -67,6 +80,18 @@ public class AdminController {
     public String userPostRemove(@PathVariable(value = "numberPhone") Long numberPhone) {
         userService.delete(numberPhone);
         return "redirect:/admin/users";
+    }
+
+    @PostMapping("/admin/orderManagement/remove/{orderId}")
+    public String orderPostRemove(@PathVariable(value = "orderId") Long orderId) {
+        orderService.delete(orderId);
+        return "redirect:/admin/orderManagement";
+    }
+
+    @PostMapping("/admin/orderManagement/finish/{orderId}")
+    public String orderFinish(@PathVariable(value = "orderId") Long orderId) {
+        orderService.orderFinish(orderId);
+        return "redirect:/admin/orderManagement";
     }
 
 }

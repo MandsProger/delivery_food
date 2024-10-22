@@ -18,17 +18,17 @@ public class OrderPayRequest {
     @NotNull
     private Long id;
 
-    //@NotNull
+    @NotNull
     private Long userId;
 
     private Set<ContentOrder> contentOrders = new HashSet<>();
 
-    //@NotNull
+    @NotNull
     private float resultPrice;
 
     private PaymentMethod paymentMethod;
 
-    //@NotNull
+    @NotNull
     private boolean isPaid;
 
     private LocalDateTime orderCompletionTime;
@@ -37,7 +37,7 @@ public class OrderPayRequest {
 
     private String feedback;
 
-    //@NotNull
+    @NotNull
     private String orderAddress;
     private AddressRequest address;
 }

@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-menu-table
+      author: Mattew
+      changes:
+        - createTable:
+            tableName: menu
+            schemaName: food
+            columns:
+              - column:
+                  name: food_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: price
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: remainder
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: category
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(250)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: volume
+                  type: varchar(100)
+                  constraints:
+                    nullable: false

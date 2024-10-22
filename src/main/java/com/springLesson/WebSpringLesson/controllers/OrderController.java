@@ -1,6 +1,7 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
+import com.springLesson.WebSpringLesson.models.Order;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.request.AddressRequest;
 import com.springLesson.WebSpringLesson.request.OrderPayRequest;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -33,7 +36,7 @@ public class OrderController {
     public String order(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Set<ContentOrder> cartItems = contentOrderService.getUserCart(user.getNumberPhone());
+        Set<ContentOrder> cartItems = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
 
         if (cartItems.isEmpty()) {
             return "redirect:/contentOrder";
@@ -43,6 +46,8 @@ public class OrderController {
         for (ContentOrder item : cartItems) {
             sum += item.getPrice();
         }
+        LocalDateTime currentTimePlusOneHour = LocalDateTime.now().plusHours(1);
+        model.addAttribute("currentTime", currentTimePlusOneHour);
         model.addAttribute("user", user);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("sum", sum);
@@ -62,7 +67,7 @@ public class OrderController {
 
         payRequest.setOrderAddress(orderAddress);
         orderService.orderPay(payRequest);
-        return "redirect:/menu";
+        return "redirect:/orderHistory";
     }
 
     @PostMapping("/order/{id}/remove")

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
 <head>
     <title>Меню ресторана</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -19,7 +19,8 @@
                     <div class="input-group" style="width:130px">
                         <button type="button" class="btn btn-outline-secondary decrement-btn">-</button>
                         <input type="number" name="count" value="1"
-                               min="1" th:max="${el.remainder}" class="form-control text-center" style="width: 60px;" />
+                               min="1" th:max="${el.remainder}" class="form-control text-center"
+                               style="appearance: none; -moz-appearance: textfield;" readonly onkeydown="return false;" />
                         <button type="button" class="btn btn-outline-secondary increment-btn">+</button>
                     </div>
                     <input type="hidden" name="action" value="buy"/>

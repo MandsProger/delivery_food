@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-content-order-table
+      author: Mattew
+      changes:
+        - createTable:
+            tableName: content_order
+            schemaName: food
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: food_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: count
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: bigint
+                  constraints:
+                    nullable: true

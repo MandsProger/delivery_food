@@ -2,6 +2,7 @@ package com.springLesson.WebSpringLesson.services;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.Menu;
+import com.springLesson.WebSpringLesson.models.Order;
 import com.springLesson.WebSpringLesson.repo.ContentOrderRepository;
 import com.springLesson.WebSpringLesson.repo.MenuRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,11 @@ public class ContentOrderService {
     private final ContentOrderRepository contentOrderRepository;
 
     @Transactional
+    public ContentOrder saveContentOrder(ContentOrder contentOrder){
+        return contentOrderRepository.save(contentOrder);
+    }
+
+    @Transactional
     public void addProductToCart(Long foodId, int count, Long numberPhone) {
         Menu menu = menuRepository.findByFoodId(foodId);
         if (menu.getRemainder() < count) {
@@ -31,17 +37,20 @@ public class ContentOrderService {
         contentOrder.setPrice(menu.getPrice() * count);
         contentOrder.setUserId(numberPhone);
 
-        contentOrderRepository.save(contentOrder);
+        saveContentOrder(contentOrder);
         menu.setRemainder(menu.getRemainder() - count);
         menuRepository.save(menu);
     }
 
-    public Set<ContentOrder> getUserCart(Long numberPhone) {
+    public Set<ContentOrder> getAllUserCartByNumberPhone(Long numberPhone) {
         return contentOrderRepository.findAllByUserIdAndOrderIdIsNull(numberPhone);
     }
 
     public ContentOrder getUserById(Long id) {
         return contentOrderRepository.findByUserId(id);
+    }
+    public Set<ContentOrder> getAllItemsByOrderId(Long orderId) {
+        return contentOrderRepository.findAllByOrderId(orderId);
     }
 
     @Transactional
