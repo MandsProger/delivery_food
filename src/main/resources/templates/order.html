@@ -25,13 +25,13 @@
 <header th:insert="~{blocks/header :: header}"></header>
 <main>
     <div class="container mt-5 d-flex">
-        <div class="address" style="width: 600px; margin-right: 20px;">
-            <h4>Адрес доставки</h4><br>
+        <div class="address" style="width: 600px; margin-right: 20px; padding: 0">
+            <h4 class="mb-4">Адрес доставки</h4>
             <div id="map"></div>
-            <div class="form-row mb-4">
-                <input type="text" name="street" placeholder="Улица" class="form-control mb-1" style="width: 250px;"
-                       required>
-                <input type="text" name="house" placeholder="Дом" class="form-control" style="width: 100px;" required>
+            <div class="form-row mb-2    d-flex">
+                <input type="text" name="street" placeholder="Улица"
+                       class="form-control mb-1" style="width: 280px;" required>
+                <input type="text" name="house" placeholder="Дом" class="form-control" style="width: 100px; height: 38px; margin-left: 10px;" required>
             </div>
             <div class="form-row mb-2 d-flex">
                 <input type="text" name="apartment" placeholder="кв./дом" class="form-control" required>
@@ -43,11 +43,11 @@
                 <input type="text" name="comment" placeholder="Комментарий к заказу" class="form-control">
             </div>
             <h4>Время доставки</h4>
-            <h5>Доставка + TIME</h5>
+            <h5 th:text="'Будет примерно в ' + ${#temporals.format(currentTime, 'HH:mm')}"></h5>
         </div>
 
-        <div class="contentOrder" style="width: 600px; margin-top: 850px; margin-left: -620px;">
-            <h4>Ваш заказ</h4><br>
+        <div class="contentOrder" style="width: 600px; margin-top: 720px; margin-left: -620px;">
+            <h4 class="mb-3">Ваш заказ</h4>
             <ul class="list-group">
                 <li th:each="item : ${cartItems}"
                     class="list-group-item d-flex justify-content-between align-items-center"
@@ -86,7 +86,7 @@
                     <input type="hidden" name="resultPrice" th:value="${sum + 149}">
                     <input type="hidden" name="userId" th:value="${user.getNumberPhone()}">
                     <input type="hidden" name="costDelivery" th:value="149">
-                    <h5 style="margin-top: 20px;" name="feedback" th:text="${sum + 149} + ' руб.'"></h5>
+                    <h3 style="margin-top: 20px;" name="feedback" th:text="${sum + 149} + ' руб.'"></h3>
                 </div>
             </form>
         </div>

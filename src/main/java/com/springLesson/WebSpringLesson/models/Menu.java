@@ -14,9 +14,8 @@ import java.util.Objects;
 public class Menu {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "food_id")
-    @NotNull
     private Long foodId;
 
     @Column(name = "price")

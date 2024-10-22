@@ -71,7 +71,6 @@ public class OrderService {
         order.setOrderAddress(orderPayRequest.getOrderAddress());
         Set<ContentOrder> contentOrder = contentOrderRepository.findAllByUserIdAndOrderIdIsNull(orderPayRequest.getUserId());
         order.setContentOrders(contentOrder);
-
         saveOrder(order);
     }
 
