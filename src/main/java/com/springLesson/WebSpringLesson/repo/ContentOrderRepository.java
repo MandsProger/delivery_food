@@ -3,7 +3,6 @@ package com.springLesson.WebSpringLesson.repo;
 import com.springLesson.WebSpringLesson.models.ContentOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 import java.util.Set;
 
@@ -14,4 +13,5 @@ public interface ContentOrderRepository extends JpaRepository<ContentOrder, Long
     Optional<ContentOrder> findById(Long id);
     Set<ContentOrder> findAllByUserIdAndOrderIdIsNull(Long userId);
     Set<ContentOrder> findAllByOrderId(Long orderId);
+    ContentOrder findByFoodNameAndOrderIdIsNullAndUserId(String foodName, Long userId);
 }

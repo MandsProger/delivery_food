@@ -18,6 +18,7 @@
             <input type="text" th:value="${el.remainder}" name="remainder" placeholder="Введите остаток блюд" class="form-control" required><br>
             <input type="text" th:value="${el.description}" name="description" placeholder="Введите описание блюда" class="form-control"><br>
             <input type="text" th:value="${el.volume}" name="volume" placeholder="Введите объем блюда" class="form-control" required><br>
+            <input type="hidden" name="_csrf" value="${_csrf.token}">
             <button type="submit" class="btn btn-success">Обновить</button>
         </form>
         </div>

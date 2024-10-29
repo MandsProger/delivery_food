@@ -1,14 +1,12 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
-import com.springLesson.WebSpringLesson.models.Order;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.request.AddressRequest;
 import com.springLesson.WebSpringLesson.request.OrderPayRequest;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
 import com.springLesson.WebSpringLesson.services.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,19 +15,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
 public class OrderController {
 
-    @Autowired
     private final ContentOrderService contentOrderService;
-
-    @Autowired
     private final OrderService orderService;
 
     @GetMapping("/order")
@@ -56,7 +51,7 @@ public class OrderController {
 
     @PostMapping("/order/pay")
     public String orderPay(@ModelAttribute OrderPayRequest payRequest,
-                            @ModelAttribute AddressRequest addressRequest) {
+                            @ModelAttribute AddressRequest addressRequest, RedirectAttributes redirectAttributes)  {
         String orderAddress = String.format("%s, дом: %s, Кв/офис: %s, Домофон: %s, Подъезд: %s, Этаж: %s",
                 addressRequest.getStreet(),
                 addressRequest.getHouse(),
@@ -64,15 +59,32 @@ public class OrderController {
                 addressRequest.getIntercom(),
                 addressRequest.getPorch(),
                 addressRequest.getFloor());
+        try {
+            payRequest.setOrderAddress(orderAddress);
+            orderService.orderPay(payRequest);
+            return "redirect:/orderHistory";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/contentOrder";
+        }
 
-        payRequest.setOrderAddress(orderAddress);
-        orderService.orderPay(payRequest);
-        return "redirect:/orderHistory";
     }
 
     @PostMapping("/order/{id}/remove")
     public String contentOrderRemoveProduct(@PathVariable(value = "id") Long id) {
         contentOrderService.contentOrderDelete(id);
+        return "redirect:/order";
+    }
+
+    @PostMapping("/order/{id}/minus")
+    public String contentOrderMinusProduct(@PathVariable(value = "id") Long id) {
+        contentOrderService.contentOrderMinus(id);
+        return "redirect:/order";
+    }
+
+    @PostMapping("/order/{id}/plus")
+    public String contentOrderMinusPlus(@PathVariable(value = "id") Long id) {
+        contentOrderService.contentOrderPlus(id);
         return "redirect:/order";
     }
 }

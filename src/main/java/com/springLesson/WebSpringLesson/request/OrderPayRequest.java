@@ -2,11 +2,9 @@ package com.springLesson.WebSpringLesson.request;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.enums.PaymentMethod;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;

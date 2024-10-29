@@ -71,12 +71,6 @@ public class UserService {
         saveUser(user);
     }
 
-    private Long cleanPhoneNumber(String phone) {
-        String phoneStr = phone.replaceAll("[^\\d]", "");
-        phoneStr = phoneStr.replaceAll("[()]|-", "");
-        return Long.parseLong(phoneStr);
-    }
-
     @Transactional
     public void userUpdate(Long numberPhone, UserEditRequest userEditRequest) {
         User user = getUserByNumberPhone(numberPhone);

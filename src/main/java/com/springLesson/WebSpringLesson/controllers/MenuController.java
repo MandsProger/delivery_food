@@ -1,34 +1,38 @@
 package com.springLesson.WebSpringLesson.controllers;
 
+import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.request.MenuEditRequest;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
 import com.springLesson.WebSpringLesson.services.MenuService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
 public class MenuController {
-    @Autowired
-    private MenuService menuService;
 
-    @Autowired
-    private ContentOrderService contentOrderService;
+    private final MenuService menuService;
+    private final ContentOrderService contentOrderService;
 
     @GetMapping("/menu")
     public String menuMain(Model model) {
         Iterable<Menu> menus = menuService.findAllMenu();
         model.addAttribute("menus", menus);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Set<ContentOrder> contentOrders = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
+        model.addAttribute("contentOrders", contentOrders);
         return "menuMain";
     }
 
@@ -73,14 +77,23 @@ public class MenuController {
 
     @PostMapping("/menu/{foodId}/buy")
     public String menuBuy(@PathVariable(value = "foodId") Long foodId,
-                          @RequestParam(value = "count", defaultValue = "1") int count,
-                          @RequestParam(value = "action") String action) {
+                          @RequestParam(value = "count", defaultValue = "1") int count, Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        contentOrderService.addProductToCart(foodId, count, user.getNumberPhone());
-        return "redirect:/menu";
+        try {
+            contentOrderService.addProductToCart(foodId, count, user.getNumberPhone());
+            return "redirect:/menu";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        Iterable<Menu> menus = menuService.findAllMenu();
+        model.addAttribute("menus", menus);
+
+        Set<ContentOrder> contentOrders = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
+        model.addAttribute("contentOrders", contentOrders);
+        return "menuMain";
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

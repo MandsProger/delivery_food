@@ -26,14 +26,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HistoryOrderController {
 
-    @Autowired
     private final HistoryOrderService historyOrderService;
-
-    @Autowired
     private final OrderService orderService;
 
     @Autowired
     private final ContentOrderService contentOrderService;
+
+    private static final Comparator<Order> ORDER_DATE_COMPARATOR =
+            Comparator.comparing(Order::getDateOrder).reversed();
 
     @GetMapping("/orderHistory")
     public String orderHistory(@RequestParam(value = "filter", defaultValue = "active") String filter, Model model) {
@@ -52,7 +52,7 @@ public class HistoryOrderController {
                     .collect(Collectors.toList());
         }
 
-        orderItems.sort(Comparator.comparing(Order::getDateOrder).reversed());
+        orderItems.sort(ORDER_DATE_COMPARATOR);
 
         model.addAttribute("user", user);
         model.addAttribute("orderItems", orderItems);

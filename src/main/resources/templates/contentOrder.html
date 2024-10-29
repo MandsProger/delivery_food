@@ -18,10 +18,20 @@
                         style="margin-bottom: 15px;">
                         <div>
                             <h4 th:text="${item.foodName}"></h4>
-                            <h5 th:text="${item.count} + ' шт.'"></h5>
+                            <div class="input-group mb-2" style="width:130px">
+                                <form th:action="'/contentOrder/' + ${item.id} + '/minus'" method="post">
+                                    <button type="submit" class="btn btn-outline-secondary decrement-btn">-</button>
+                                </form>
+                                <input type="number" name="count" th:value="${item.count}" class="form-control text-center"
+                                       style="appearance: none; -moz-appearance: textfield;" readonly onkeydown="return false;" />
+                                <form th:action="'/contentOrder/' + ${item.id} + '/plus'" method="post">
+                                    <button type="submit" class="btn btn-outline-secondary increment-btn">+</button>
+                                </form>
+                            </div>
                             <h4 th:text="${item.price} + ' руб.'"></h4>
                         </div>
                         <form th:action="'/contentOrder/' + ${item.id} + '/remove'" method="post">
+                            <input type="hidden" name="_csrf" value="${_csrf.token}">
                             <button class="btn btn-outline-danger" type="submit">Удалить</button>
                         </form>
                     </li>
@@ -36,6 +46,12 @@
             <br>
             <a th:href="'/order'" class="btn btn-success" th:if="${cartItems.size() != 0}">Оформить заказ</a>
         </div>
+        <br><br>
+        <span th:if="${errorMessage ne null}">
+            <div th:fragment="error" id="error" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
+            </div>
+        </span>
     </div>
 </main>
 <div th:insert="~{blocks/footer :: footer}"></div>

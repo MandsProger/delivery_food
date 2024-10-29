@@ -3,12 +3,8 @@ package com.springLesson.WebSpringLesson.controllers;
 import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
-import com.springLesson.WebSpringLesson.services.MenuService;
-import com.springLesson.WebSpringLesson.services.OrderService;
-import com.springLesson.WebSpringLesson.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,8 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -25,11 +19,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ContentOrderController {
 
-    @Autowired
     private final ContentOrderService contentOrderService;
-
-    @Autowired
-    private final MenuService menuService;
 
     @GetMapping("/contentOrder")
     public String contentOrderUser(Model model) {
@@ -50,6 +40,18 @@ public class ContentOrderController {
     @PostMapping("/contentOrder/{id}/remove")
     public String contentOrderRemoveProduct(@PathVariable(value = "id") Long id) {
         contentOrderService.contentOrderDelete(id);
+        return "redirect:/contentOrder";
+    }
+
+    @PostMapping("/contentOrder/{id}/minus")
+    public String contentOrderMinusProduct(@PathVariable(value = "id") Long id) {
+        contentOrderService.contentOrderMinus(id);
+        return "redirect:/contentOrder";
+    }
+
+    @PostMapping("/contentOrder/{id}/plus")
+    public String contentOrderMinusPlus(@PathVariable(value = "id") Long id) {
+        contentOrderService.contentOrderPlus(id);
         return "redirect:/contentOrder";
     }
 }

@@ -4,7 +4,6 @@ import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class MainController {
 
-    @Autowired
     public final UserService userService;
 
     @GetMapping("/")

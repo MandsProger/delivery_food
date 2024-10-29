@@ -20,6 +20,7 @@
             <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                 <a th:href="'/menu/' + ${el.foodId} + '/edit'" class="btn btn-warning">Редактировать</a><br><br>
                 <form th:action="'/menu/' + ${el.foodId} + '/remove'" method="post">
+                    <input type="hidden" name="_csrf" value="${_csrf.token}">
                     <button class="btn btn-warning" type="submit">Удалить</button>
                 </form>
             </div>
