@@ -1,8 +1,10 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
+import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
+import com.springLesson.WebSpringLesson.services.MenuService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -20,17 +26,25 @@ import java.util.Set;
 public class ContentOrderController {
 
     private final ContentOrderService contentOrderService;
+    private final MenuService menuService;
 
     @GetMapping("/contentOrder")
     public String contentOrderUser(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         Set<ContentOrder> cartItems = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
+        Map<String, Menu> menusMap = new HashMap<>();
+
+        List<Menu> allMenus = menuService.findAllMenu();
+        for (Menu menu : allMenus) {
+            menusMap.put(menu.getName(), menu);
+        }
         float sum = 0;
         for (ContentOrder item : cartItems) {
             sum += item.getPrice();
         }
         model.addAttribute("user", user);
+        model.addAttribute("menusMap", menusMap);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("sum", sum);
 

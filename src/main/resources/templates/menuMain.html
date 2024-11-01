@@ -11,9 +11,13 @@
     <div class="container mt-5">
         <h1>Меню</h1><br><br>
         <div class="row">
-            <div th:each="el, stat : ${menus}" class="col-4 text-center mb-4" th:if="${el.remainder} > 0">
+            <div th:each="el, stat : ${menus}" class="text-center mb-4" th:if="${el.remainder} > 0"
+                 style="border: 1px solid #dee2e6; border-radius: 0.25rem; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-right:30px; width: 31%;">
+                <img th:src="@{/uploads/{imagePath}(imagePath=${el.imagePath})}"
+                     th:alt="${'Изображение ' + el.name}" class="img-fluid mb-3"
+                     style="width: 220px; height: 220px; object-fit: cover;"/>
                 <h3 th:text="${el.name}"></h3>
-                <p th:text="${el.description}"></p>
+                <!--<p th:text="${el.description}"></p>-->
                 <div th:each="co : ${contentOrders}" th:if="${co.foodName == el.name}">
                     <p th:text="'Осталось ' + ${el.remainder - co.count}"></p>
                 </div>
@@ -27,7 +31,9 @@
                         <button type="button" class="btn btn-outline-secondary increment-btn">+</button>
                     </div>
                     <input type="hidden" name="action" value="buy"/>
-                    <button type="submit" class="btn btn-primary ms-2">Купить</button>
+                    <div >
+                        <button type="submit" class="btn btn-primary ms-2">Купить</button>
+                    </div>
                 </form>
                 <a th:href="'/menu/' + ${el.foodId}" class="btn btn-warning">Подробнее</a>
             </div>

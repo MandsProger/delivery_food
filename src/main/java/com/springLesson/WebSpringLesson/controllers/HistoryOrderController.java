@@ -1,10 +1,12 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
+import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.models.Order;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
 import com.springLesson.WebSpringLesson.services.HistoryOrderService;
+import com.springLesson.WebSpringLesson.services.MenuService;
 import com.springLesson.WebSpringLesson.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -28,6 +27,7 @@ public class HistoryOrderController {
 
     private final HistoryOrderService historyOrderService;
     private final OrderService orderService;
+    private final MenuService menuService;
 
     @Autowired
     private final ContentOrderService contentOrderService;
@@ -66,10 +66,18 @@ public class HistoryOrderController {
         Set<ContentOrder> items = contentOrderService.getAllItemsByOrderId(orderId);
         Optional<Order> orderOptional = orderService.getOrderById(orderId);
 
+        Map<String, Menu> menusMap = new HashMap<>();
+
+        List<Menu> allMenus = menuService.findAllMenu();
+        for (Menu menu : allMenus) {
+            menusMap.put(menu.getName(), menu);
+        }
+
         if (!items.isEmpty() && orderOptional.isPresent()) {
             Order order = orderOptional.get();
             model.addAttribute("items", items);
             model.addAttribute("order", order);
+            model.addAttribute("menusMap", menusMap);
             String formattedDate = orderService.getFormattedOrderDate(order.getDateOrder());
             model.addAttribute("formattedDate", formattedDate);
             return "currentOrderHistory";

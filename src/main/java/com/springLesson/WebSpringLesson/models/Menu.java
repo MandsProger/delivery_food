@@ -43,6 +43,9 @@ public class Menu {
     @NotNull
     private String volume;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
     public Menu() {
     }
 

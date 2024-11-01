@@ -10,24 +10,33 @@
 <main>
     <div class="container mt-5 d-flex">
 
-        <div style="width: 500px; margin-right: 20px;">
+        <div style="width: 600px; margin-right: 20px;">
             <div style="width: 500px;">
                 <h4 th:if="${!order.isPaid}" th:text="'Будет в ' + ${formattedDate}"></h4>
                 <h4 th:if="${order.isPaid}" th:text="'Заказ завершен ' + ${#temporals.format(order.orderCompletionTime, 'dd MMMM yyyy HH:mm')}"></h4>
             </div>
             <ul class="list-group mt-4">
                 <h4 class="mb-3">Состав заказа</h4>
-                <li th:each="item : ${items}" class="list-group-item d-flex justify-content-between align-items-center" style="margin-bottom: 15px;">
-                    <div>
-                        <h4 th:text="${item.foodName}"></h4>
-                        <h5 th:text="${item.count} + ' шт.'"></h5>
+                <li th:each="item : ${items}" class="list-group-item d-flex align-items-center" style="margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <div class="me-3">
+                            <div th:if="${menusMap[item.foodName] != null}">
+                                <img th:src="@{/uploads/{imagePath}(imagePath=${menusMap[item.foodName].imagePath})}"
+                                     th:alt="${'Изображение ' + menusMap[item.foodName].name}" class="img-fluid"
+                                     style="width: 100px; height: 100px; object-fit: cover;"/>
+                            </div>
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <h4 th:text="${item.foodName}" style="margin: 0;"></h4>
+                            <h5 th:text="${item.count} + ' шт.'" style="margin: 0;"></h5>
+                        </div>
+                        <h4 th:text="${item.price} + ' руб.'" class="ms-3"></h4>
                     </div>
-                    <h4 th:text="${item.price} + ' руб.'"></h4>
                 </li>
             </ul>
         </div>
 
-        <div style="width: 400px; margin-left: 200px; margin-top: 100px;" class="list-group-item d-flex flex-column">
+        <div style="width: 400px; margin-left: 120px; margin-top: 100px;" class="list-group-item d-flex flex-column">
             <h4 th:text="'Заказ №' + ${order.id}"></h4>
             <h5 th:text="${#temporals.format(order.dateOrder, 'dd MMMM yyyy HH:mm')}"></h5>
             <h4 th:text="Адрес" class="mt-4"></h4>

@@ -46,3 +46,16 @@ databaseChangeLog:
                   type: varchar(100)
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 02-add-image_path-menu-table
+      author: Mattew
+      changes:
+        - addColumn:
+            tableName: menu
+            schemaName: food
+            columns:
+              - column:
+                  name: image_path
+                  type: varchar(255)
+                  constraints:
+                    nullable: true

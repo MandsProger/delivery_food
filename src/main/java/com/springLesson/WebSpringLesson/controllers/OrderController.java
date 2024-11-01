@@ -1,10 +1,12 @@
 package com.springLesson.WebSpringLesson.controllers;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
+import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.request.AddressRequest;
 import com.springLesson.WebSpringLesson.request.OrderPayRequest;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
+import com.springLesson.WebSpringLesson.services.MenuService;
 import com.springLesson.WebSpringLesson.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -26,12 +31,20 @@ public class OrderController {
 
     private final ContentOrderService contentOrderService;
     private final OrderService orderService;
+    private final MenuService menuService;
 
     @GetMapping("/order")
     public String order(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         Set<ContentOrder> cartItems = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
+
+        Map<String, Menu> menusMap = new HashMap<>();
+
+        List<Menu> allMenus = menuService.findAllMenu();
+        for (Menu menu : allMenus) {
+            menusMap.put(menu.getName(), menu);
+        }
 
         if (cartItems.isEmpty()) {
             return "redirect:/contentOrder";
@@ -44,6 +57,7 @@ public class OrderController {
         LocalDateTime currentTimePlusOneHour = LocalDateTime.now().plusHours(1);
         model.addAttribute("currentTime", currentTimePlusOneHour);
         model.addAttribute("user", user);
+        model.addAttribute("menusMap", menusMap);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("sum", sum);
         return "order";

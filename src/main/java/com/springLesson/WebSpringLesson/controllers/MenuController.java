@@ -7,12 +7,18 @@ import com.springLesson.WebSpringLesson.request.MenuEditRequest;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
 import com.springLesson.WebSpringLesson.services.MenuService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -45,8 +51,13 @@ public class MenuController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/menu/add")
     public String menuPostAdd(@ModelAttribute MenuEditRequest menuEditRequest,
-                              Long foodId) {
-        menuService.menuEdit(foodId, menuEditRequest);
+                              @RequestParam("image") MultipartFile image) {
+        try {
+            menuService.menuEdit(null, menuEditRequest, image);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "redirect:/menu?error=true";
+        }
         return "redirect:/menu";
     }
 
@@ -70,8 +81,14 @@ public class MenuController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/menu/{foodId}/edit")
     public String menuPostUpdate(@ModelAttribute MenuEditRequest menuEditRequest,
-                                 @PathVariable(value = "foodId") Long foodId) {
-        menuService.menuEdit(foodId, menuEditRequest);
+                                 @PathVariable(value = "foodId") Long foodId,
+                                 @RequestParam("image") MultipartFile image) {
+        try {
+            menuService.menuEdit(foodId, menuEditRequest, image);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "redirect:/menu?error=true";
+        }
         return "redirect:/menu";
     }
 
