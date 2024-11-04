@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-role-table
+      author: Mattew
+      changes:
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: number_phone
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    unique: true
+                    nullable: false
+              - column:
+                  name: roles
+                  type: ENUM('ROLE_USER', 'ROLE_ADMIN')
+                  constraints:
+                    nullable: false

@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,17 +16,16 @@ import java.util.Set;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @NotNull
     private Long id;
 
     @Column(name = "user_id")
-    //@NotNull
+    @NotNull
     private Long userId;
 
     @Column(nullable = false, updatable = false, name = "date_order")
-    //@NotNull
+    @NotNull
     private LocalDateTime dateOrder;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -35,7 +33,7 @@ public class Order {
     private Set<ContentOrder> contentOrders = new HashSet<>();
 
     @Column(name = "result_price")
-    //@NotNull
+    @NotNull
     private float resultPrice;
 
     @Enumerated(EnumType.STRING)
@@ -43,7 +41,7 @@ public class Order {
     private PaymentMethod paymentMethod;
 
     @Column(name = "is_paid")
-    //@NotNull
+    @NotNull
     private boolean isPaid;
 
     @Column(name = "order_completion_time")
@@ -56,7 +54,7 @@ public class Order {
     private String feedback;
 
     @Column(name = "order_address")
-    //@NotNull
+    @NotNull
     private String orderAddress;
 
     @PrePersist

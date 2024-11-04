@@ -1,34 +1,44 @@
 package com.springLesson.WebSpringLesson.controllers;
 
+import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.request.MenuEditRequest;
 import com.springLesson.WebSpringLesson.services.ContentOrderService;
 import com.springLesson.WebSpringLesson.services.MenuService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
 public class MenuController {
-    @Autowired
-    private MenuService menuService;
 
-    @Autowired
-    private ContentOrderService contentOrderService;
+    private final MenuService menuService;
+    private final ContentOrderService contentOrderService;
 
     @GetMapping("/menu")
     public String menuMain(Model model) {
         Iterable<Menu> menus = menuService.findAllMenu();
         model.addAttribute("menus", menus);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Set<ContentOrder> contentOrders = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
+        model.addAttribute("contentOrders", contentOrders);
         return "menuMain";
     }
 
@@ -41,8 +51,13 @@ public class MenuController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/menu/add")
     public String menuPostAdd(@ModelAttribute MenuEditRequest menuEditRequest,
-                              Long foodId) {
-        menuService.menuEdit(foodId, menuEditRequest);
+                              @RequestParam("image") MultipartFile image) {
+        try {
+            menuService.menuEdit(null, menuEditRequest, image);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "redirect:/menu?error=true";
+        }
         return "redirect:/menu";
     }
 
@@ -66,21 +81,36 @@ public class MenuController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/menu/{foodId}/edit")
     public String menuPostUpdate(@ModelAttribute MenuEditRequest menuEditRequest,
-                                 @PathVariable(value = "foodId") Long foodId) {
-        menuService.menuEdit(foodId, menuEditRequest);
+                                 @PathVariable(value = "foodId") Long foodId,
+                                 @RequestParam("image") MultipartFile image) {
+        try {
+            menuService.menuEdit(foodId, menuEditRequest, image);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "redirect:/menu?error=true";
+        }
         return "redirect:/menu";
     }
 
     @PostMapping("/menu/{foodId}/buy")
     public String menuBuy(@PathVariable(value = "foodId") Long foodId,
-                          @RequestParam(value = "count", defaultValue = "1") int count,
-                          @RequestParam(value = "action") String action) {
+                          @RequestParam(value = "count", defaultValue = "1") int count, Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        contentOrderService.addProductToCart(foodId, count, user.getNumberPhone());
-        return "redirect:/menu";
+        try {
+            contentOrderService.addProductToCart(foodId, count, user.getNumberPhone());
+            return "redirect:/menu";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        Iterable<Menu> menus = menuService.findAllMenu();
+        model.addAttribute("menus", menus);
+
+        Set<ContentOrder> contentOrders = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
+        model.addAttribute("contentOrders", contentOrders);
+        return "menuMain";
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

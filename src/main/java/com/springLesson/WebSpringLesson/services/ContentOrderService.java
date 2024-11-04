@@ -4,11 +4,10 @@ import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.repo.ContentOrderRepository;
 import com.springLesson.WebSpringLesson.repo.MenuRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -19,38 +18,75 @@ public class ContentOrderService {
     private final ContentOrderRepository contentOrderRepository;
 
     @Transactional
-    public void addProductToCart(Long foodId, int count, Long numberPhone) {
-        Menu menu = menuRepository.findByFoodId(foodId);
-        if (menu.getRemainder() < count) {
-            throw new IllegalArgumentException("Недостаточно товара на складе.");
-        }
-
-        ContentOrder contentOrder = new ContentOrder();
-        contentOrder.setFoodName(menu.getName());
-        contentOrder.setCount(count);
-        contentOrder.setPrice(menu.getPrice() * count);
-        contentOrder.setUserId(numberPhone);
-
-        contentOrderRepository.save(contentOrder);
-        menu.setRemainder(menu.getRemainder() - count);
-        menuRepository.save(menu);
+    public ContentOrder saveContentOrder(ContentOrder contentOrder){
+        return contentOrderRepository.save(contentOrder);
     }
 
-    public Set<ContentOrder> getUserCart(Long numberPhone) {
-        return contentOrderRepository.findAllByUserIdAndOrderIdIsNull(numberPhone);
+    @Transactional
+    public void addProductToCart(Long foodId, int count, Long numberPhone) {
+        Menu menu = menuRepository.findByFoodId(foodId);
+
+        ContentOrder contentOrder = contentOrderRepository.findByFoodNameAndOrderIdIsNullAndUserId(menu.getName(), numberPhone);
+        if (contentOrder == null) {
+            ContentOrder newContentOrder = new ContentOrder();
+            newContentOrder.setFoodName(menu.getName());
+            newContentOrder.setCount(count);
+            newContentOrder.setPrice(menu.getPrice() * count);
+            newContentOrder.setUserId(numberPhone);
+            saveContentOrder(newContentOrder);
+        } else {
+            if (menu.getRemainder() < contentOrder.getCount() + count) {
+                throw new IllegalArgumentException("Недостаточно товара на складе.");
+            }
+            contentOrder.setCount(contentOrder.getCount() + count);
+            contentOrder.setPrice(menu.getPrice() * contentOrder.getCount());
+            saveContentOrder(contentOrder);
+        }
+    }
+
+    public Set<ContentOrder> getAllUserCartByNumberPhone(Long numberPhone) {
+        Set<ContentOrder> contentOrders = contentOrderRepository.findAllByUserIdAndOrderIdIsNull(numberPhone);
+        return contentOrders;
     }
 
     public ContentOrder getUserById(Long id) {
         return contentOrderRepository.findByUserId(id);
     }
 
+
+    public Set<ContentOrder> getAllItemsByOrderId(Long orderId) {
+        return contentOrderRepository.findAllByOrderId(orderId);
+    }
+
     @Transactional
     public void contentOrderDelete(Long id) {
-        Optional<ContentOrder> contentOrder = contentOrderRepository.findById(id);
-        ContentOrder contentOrder1 = contentOrder.get();
-        Menu menu = menuRepository.findByName(contentOrder1.getFoodName());
-        menu.setRemainder(menu.getRemainder() + contentOrder1.getCount());
         contentOrderRepository.deleteById(id);
     }
 
+    @Transactional
+    public void contentOrderMinus(Long id) {
+        ContentOrder contentOrder = contentOrderRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Заказ с ID " + id + " не найден"));
+        Menu menu = menuRepository.findByName(contentOrder.getFoodName());
+        if (contentOrder.getCount() > 1) {
+            contentOrder.setCount(contentOrder.getCount()-1);
+            contentOrder.setPrice(contentOrder.getCount() * menu.getPrice());
+            saveContentOrder(contentOrder);
+        } else {
+            contentOrderRepository.deleteById(id);
+        }
+
+    }
+
+    @Transactional
+    public void contentOrderPlus(Long id) {
+        ContentOrder contentOrder = contentOrderRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Заказ с ID " + id + " не найден"));
+        Menu menu = menuRepository.findByName(contentOrder.getFoodName());
+        if (contentOrder.getCount() <= menu.getRemainder()-1) {
+            contentOrder.setCount(contentOrder.getCount() + 1);
+            contentOrder.setPrice(contentOrder.getCount() * menu.getPrice());
+            saveContentOrder(contentOrder);
+        }
+    }
 }

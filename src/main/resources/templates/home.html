@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
 <head>
     <title th:text="${title}"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -9,7 +9,7 @@
     <header th:insert="~{blocks/header :: header}"></header>
     <main>
         <section class="py-5 text-center container">
-            <div class="row py-lg-5">
+            <div class="row py-lg-5 bg-body-tertiary">
                 <div class="col-lg-6 col-md-8 mx-auto">
                     <h1 class="fw-light">Album example</h1>
                     <p class="lead text-body-secondary">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>

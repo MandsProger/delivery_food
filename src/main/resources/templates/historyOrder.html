@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
 <head>
     <title>История заказов</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -9,12 +9,24 @@
 <header th:insert="~{blocks/header :: header}"></header>
 <main>
     <div class="container mt-5 mb-5">
-        <div class="contentOrder" style="width: 600px;">
-            <h4>Ваши покупки</h4><br>
-            <ul class="list-group">
-                <li th:each="item : ${orderItems}" class="list-group-item" style="margin-bottom: 15px;">
-                    <h4 th:text="'Заказ №' + ${item.id}"></h4>
-                    <h4 th:text="'Сумма: ' + ${item.resultPrice + ' руб.'}"></h4>
+        <h4>Ваши покупки</h4><br>
+
+        <div>
+            <a th:href="@{/orderHistory(filter='active')}"
+               th:class="'btn btn-outline-success ' + (${filterStatus == 'active'} ? 'active' : '')">Активные заказы</a>
+            <a th:href="@{/orderHistory(filter='completed')}"
+               th:class="'btn btn-outline-secondary ' + (${filterStatus == 'completed'} ? 'active' : '')">Завершенные заказы</a>
+        </div>
+
+        <div class="contentOrder" style="width: 500px;">
+            <ul class="list-group mt-4">
+                <li th:each="item : ${orderItems}" class="list-group-item d-flex justify-content-between align-items-center" style="margin-bottom: 15px;"
+                    th:if="${(filterStatus == 'active' && !item.isPaid) || (filterStatus == 'completed' && item.isPaid)}">
+                    <div>
+                        <h4 th:text="'Заказ №' + ${item.id}"></h4>
+                        <h4 th:text="'Сумма: ' + ${item.resultPrice + ' руб.'}"></h4>
+                    </div>
+                    <a th:href="'/orderHistory/' + ${item.id}" class="btn btn-outline-light">Подробнее</a>
                 </li>
             </ul>
         </div>

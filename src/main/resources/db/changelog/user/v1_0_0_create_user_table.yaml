@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-user-table
+      author: Mattew
+      changes:
+        - createTable:
+            tableName: users
+            schemaName: food
+            columns:
+              - column:
+                  name: number_phone
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    unique: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gender
+                  type: ENUM('MALE', 'FEMALE')
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: bonus
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_of_registration
+                  type: timestamp
+                  constraints:
+                    nullable: false

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @RequiredArgsConstructor
 public class MainController {
+
     public final UserService userService;
 
     @GetMapping("/")

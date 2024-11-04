@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
 <head>
     <title>Меню ресторана</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -11,24 +11,30 @@
     <div class="container mt-5">
         <h1>Меню</h1><br><br>
         <div class="row">
-            <div th:each="el, stat : ${menus}" class="col-4 text-center mb-4" th:if="${el.remainder} > 0">
+            <div th:each="el, stat : ${menus}" class="text-center mb-4" th:if="${el.remainder} > 0"
+                 style="border: 1px solid #dee2e6; border-radius: 0.25rem; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-right:30px; width: 31%;">
+                <img th:src="@{/uploads/{imagePath}(imagePath=${el.imagePath})}"
+                     th:alt="${'Изображение ' + el.name}" class="img-fluid mb-3"
+                     style="width: 220px; height: 220px; object-fit: cover;"/>
                 <h3 th:text="${el.name}"></h3>
-                <p th:text="${el.description}"></p>
+                <!--<p th:text="${el.description}"></p>-->
+                <div th:each="co : ${contentOrders}" th:if="${co.foodName == el.name}">
+                    <p th:text="'Осталось ' + ${el.remainder - co.count}"></p>
+                </div>
                 <h4 th:text="${el.price} + ' руб.'"></h4>
                 <form th:action="'/menu/' + ${el.foodId} + '/buy'" method="post" class="d-flex mt-2 mb-4 justify-content-center">
                     <div class="input-group" style="width:130px">
                         <button type="button" class="btn btn-outline-secondary decrement-btn">-</button>
                         <input type="number" name="count" value="1"
-                               min="1" th:max="${el.remainder}" class="form-control text-center" style="width: 60px;" />
+                               min="1" th:max="${el.remainder}" class="form-control text-center"
+                               style="appearance: none; -moz-appearance: textfield;" readonly onkeydown="return false;" />
                         <button type="button" class="btn btn-outline-secondary increment-btn">+</button>
                     </div>
                     <input type="hidden" name="action" value="buy"/>
-                    <button type="submit" class="btn btn-primary ms-2">Купить</button>
+                    <div >
+                        <button type="submit" class="btn btn-primary ms-2">Купить</button>
+                    </div>
                 </form>
-
-                <div th:if="${isBuyClicked}">
-                    <p>Количество блюд: <span th:text="${contentOrder.count}">0</span></p>
-                </div>
                 <a th:href="'/menu/' + ${el.foodId}" class="btn btn-warning">Подробнее</a>
             </div>
         </div>
@@ -36,6 +42,12 @@
         <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
            href="/menu/add" class="btn btn-success">Добавить блюдо в меню
         </a>
+        <br><br>
+        <span th:if="${errorMessage ne null}">
+            <div th:fragment="error" id="error" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
+            </div>
+        </span>
     </div>
 </main>
 <div th:insert="~{blocks/footer :: footer}"></div>

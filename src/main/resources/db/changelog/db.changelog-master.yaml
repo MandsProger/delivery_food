@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/user/v1_0_0_create_user_table.yaml
+  - include:
+      file: db/changelog/order/v1_0_0_create_order_table.yaml
+  - include:
+      file: db/changelog/content_order/v1_0_0_create_content_order_table.yaml
+  - include:
+      file: db/changelog/menu/v1_0_0_create_menu_table.yaml
+  - include:
+      file: db/changelog/user/v1_0_0_create_user_roles_table.yaml

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
 <head>
     <title>Оформление заказа</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -10,17 +10,49 @@
 <main>
     <div class="container mt-5">
         <h2 th:text="'Ваша корзинна, ' + ${user.name}"></h2>
-        <div th:if="${cartItems.size() > 0}">
-            <ul class="list-group">
-                <li th:each="item : ${cartItems}" class="list-group-item">
-                    <h4 th:text="${item.foodName}"></h4>
-                    <h5 th:text="${item.count} + ' шт.'"></h5>
-                    <h4 th:text="${item.price} + ' руб.'"></h4>
-                    <form th:action="'/contentOrder/' + ${item.id} + '/remove'" method="post">
-                        <button class="btn btn-warning" type="submit">Удалить</button>
-                    </form>
-                </li>
-            </ul>
+        <div style="width: 900px;" class="col-4 text-center mb-4">
+            <div th:if="${cartItems.size() > 0}">
+                <ul class="list-group">
+                    <li th:each="item : ${cartItems}" class="list-group-item d-flex align-items-center"
+                        style="margin-bottom: 15px;">
+                        <div style="flex-shrink: 0;">
+                            <div th:if="${menusMap[item.foodName] != null}">
+                                <img th:src="@{/uploads/{imagePath}(imagePath=${menusMap[item.foodName].imagePath})}"
+                                     th:alt="${'Изображение ' + menusMap[item.foodName].name}" class="img-fluid"
+                                     style="width: 190px; height: 190px; object-fit: cover;"/>
+                            </div>
+                        </div>
+
+                        <div class="ms-3 flex-grow-1 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 th:text="${item.foodName}" style="margin: 0;"></h4>
+                            </div>
+                            <div>
+                                <h4 th:text="${item.price} + ' руб.'" style="margin: 0;"></h4>
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="width: 130px; margin-left: 15px;">
+                            <form th:action="'/contentOrder/' + ${item.id} + '/minus'" method="post">
+                                <button type="submit" class="btn btn-outline-secondary decrement-btn">-</button>
+                            </form>
+                            <input type="number" name="count" th:value="${item.count}"
+                                   class="form-control text-center"
+                                   style="appearance: none; -moz-appearance: textfield; margin: 0;" readonly
+                                   onkeydown="return false;"/>
+                            <form th:action="'/contentOrder/' + ${item.id} + '/plus'" method="post">
+                                <button type="submit" class="btn btn-outline-secondary increment-btn">+</button>
+                            </form>
+                        </div>
+
+                        <form th:action="'/contentOrder/' + ${item.id} + '/remove'" method="post"
+                              style="margin-left: 15px;">
+                            <input type="hidden" name="_csrf" value="${_csrf.token}">
+                            <button class="btn btn-outline-danger" type="submit">Удалить</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="container" th:if="${cartItems.size() > 0}">
             <h4>Общая сумма: <span th:text="${sum} + 'руб.'"></span></h4>
@@ -30,6 +62,12 @@
         </div>
         <br>
         <a th:href="'/order'" class="btn btn-success" th:if="${cartItems.size() != 0}">Оформить заказ</a>
+        <br><br>
+        <span th:if="${errorMessage ne null}">
+            <div th:fragment="error" id="error" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
+            </div>
+        </span>
     </div>
 </main>
 <div th:insert="~{blocks/footer :: footer}"></div>

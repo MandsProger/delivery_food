@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Objects;
 
 @Entity
@@ -14,9 +13,8 @@ import java.util.Objects;
 public class Menu {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "food_id")
-    @NotNull
     private Long foodId;
 
     @Column(name = "price")
@@ -44,6 +42,9 @@ public class Menu {
     @Column(name = "volume")
     @NotNull
     private String volume;
+
+    @Column(name = "image_path")
+    private String imagePath;
 
     public Menu() {
     }
