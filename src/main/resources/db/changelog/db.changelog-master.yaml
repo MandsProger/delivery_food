@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/menu/v1_0_0_create_menu_table.yaml
   - include:
       file: db/changelog/user/v1_0_0_create_user_roles_table.yaml
+  - include:
+      file: db/changelog/warehouse/v1_0_0_create_warehouse_table.yaml

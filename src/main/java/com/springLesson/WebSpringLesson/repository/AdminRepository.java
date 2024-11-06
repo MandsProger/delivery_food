@@ -1,4 +1,4 @@
-package com.springLesson.WebSpringLesson.repo;
+package com.springLesson.WebSpringLesson.repository;
 
 import com.springLesson.WebSpringLesson.models.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;

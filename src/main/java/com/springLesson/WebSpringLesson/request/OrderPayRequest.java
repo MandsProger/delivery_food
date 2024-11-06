@@ -38,4 +38,6 @@ public class OrderPayRequest {
     @NotNull
     private String orderAddress;
     private AddressRequest address;
+
+    private String comment;
 }

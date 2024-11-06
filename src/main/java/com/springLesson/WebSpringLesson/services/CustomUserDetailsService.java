@@ -1,6 +1,6 @@
 package com.springLesson.WebSpringLesson.services;
 
-import com.springLesson.WebSpringLesson.repo.UserRepository;
+import com.springLesson.WebSpringLesson.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

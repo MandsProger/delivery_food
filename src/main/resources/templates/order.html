@@ -27,7 +27,7 @@
         <div class="address" style="width: 600px; margin-right: 20px; padding: 0">
             <h4 class="mb-4">Адрес доставки</h4>
             <div id="map"></div>
-            <div class="form-row mb-2    d-flex">
+            <div class="form-row mb-2 d-flex">
                 <input type="text" name="street" placeholder="Улица"
                        class="form-control mb-1" style="width: 280px;" required>
                 <input type="text" name="house" placeholder="Дом" class="form-control"
@@ -117,33 +117,65 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        let map, marker;
+        let map;
 
-        // Инициализация карты и маркера
+        // Восстанавливаем значения форм из localStorage
+        const addressFields = ["street", "house", "apartment", "intercom", "porch", "floor", "comment"];
+
+        addressFields.forEach(field => {
+            const fieldValue = localStorage.getItem(field);
+            if (fieldValue) {
+                document.querySelector(`input[name='${field}']`).value = fieldValue;
+            }
+        });
+
+        // Сохраняем данные формы в localStorage при изменении
+        addressFields.forEach(field => {
+            document.querySelector(`input[name='${field}']`).addEventListener('input', (event) => {
+                localStorage.setItem(field, event.target.value);
+            });
+        });
+
+        // Инициализация карты
         ymaps.ready(() => {
             map = new ymaps.Map("map", {
-                center: [55.751244, 37.618423], // Начальные координаты (Москва)
+                center: [54.1918, 45.1833], // Начальные координаты (Саранск)
                 zoom: 12,
                 controls: ['smallMapDefaultSet'],
                 behaviors: ['default', 'scrollZoom']
             });
 
-            marker = new ymaps.Placemark(map.getCenter(), {
-                hintContent: 'Выберите адрес',
-                balloonContent: 'Вы здесь'
-            }, {
-                preset: 'islands#icon',
-                iconColor: '#0095b6'
-            });
-
-            map.geoObjects.add(marker);
-
+            // Обработка клика на карту
             map.events.add('click', e => {
                 const coords = e.get('coords');
-                marker.geometry.coordinates = coords;
+                if (!isInSaranck(coords)) {
+                    alert("Выберите адрес внутри города Саранск и близлежащих районов.");
+                    return;
+                }
+
+                // Удаление существующего маркера перед установкой нового
+                if (map.geoObjects.getLength() > 0) {
+                    map.geoObjects.remove(map.geoObjects.get(0));
+                }
+
+                // Создание и добавление нового маркера
+                const marker = new ymaps.Placemark(coords, {
+                    hintContent: 'Выберите адрес',
+                    balloonContent: 'Вы здесь'
+                }, {
+                    preset: 'islands#icon',
+                    iconColor: '#0095b6'
+                });
+
+                map.geoObjects.add(marker);
                 getAddress(coords);
             });
         });
+
+        function isInSaranck(coords) {
+            const [latitude, longitude] = coords;
+            return latitude >= 54.150 && latitude <= 54.230 && longitude >= 45.100 && longitude <= 45.300;
+        }
 
         function getAddress(coords) {
             ymaps.geocode(coords).then(res => {
@@ -154,8 +186,15 @@
 
         function fillAddressFields(components) {
             const [street, house] = components;
-            document.querySelector("input[name='street']").value = street || '';
-            document.querySelector("input[name='house']").value = house || '';
+            const streetInput = document.querySelector("input[name='street']");
+            const houseInput = document.querySelector("input[name='house']");
+
+            streetInput.value = street || '';
+            houseInput.value = house || '';
+
+            // Сохраняем адрес в localStorage
+            localStorage.setItem('street', streetInput.value);
+            localStorage.setItem('house', houseInput.value);
         }
 
         // Обработка отправки формы
@@ -167,29 +206,24 @@
 
             // Проверка на заполненность обязательных полей
             if (!street || !house || !apartment || !floor) {
-                event.preventDefault(); // Остановить отправку формы
-                alert("Пожалуйста, заполните обязательные поля адреса: Улица, Дом, Квартира и Этаж."); // Уведомление для пользователя
-                return; // Выход из функции
+                event.preventDefault();
+                alert("Пожалуйста, заполните обязательные поля адреса: Улица, Дом, Квартира и Этаж.");
+                return;
             }
 
-            const addressFields = ["street", "house", "apartment", "intercom", "porch", "floor"];
+            const addressFields = ["street", "house", "apartment", "intercom", "porch", "floor", "comment"];
             addressFields.forEach(field => {
+                localStorage.removeItem(field); // Удалить сохраненные значения при отправке формы
                 let value = document.querySelector(`input[name='${field}']`).value;
                 let hiddenField = document.createElement("input");
                 hiddenField.type = "hidden";
                 hiddenField.name = field;
                 hiddenField.value = value;
-                paymentForm.appendChild(hiddenField); // Добавление скрытых полей в форму
+                paymentForm.appendChild(hiddenField);
             });
         });
     });
 
-
-
-
-
-</script>
-<script>
     // Сохраняем позицию перед переходом
     window.onbeforeunload = function() {
         sessionStorage.setItem('scrollPos', window.scrollY);
@@ -203,9 +237,6 @@
             sessionStorage.removeItem('scrollPos'); // Удаляем позицию после использования
         }
     };
-
-
-
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 </body>

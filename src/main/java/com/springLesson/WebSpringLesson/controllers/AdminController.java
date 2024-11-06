@@ -1,10 +1,14 @@
 package com.springLesson.WebSpringLesson.controllers;
 
+import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.models.enums.Role;
 import com.springLesson.WebSpringLesson.request.UserEditRequest;
+import com.springLesson.WebSpringLesson.request.WarehouseRequest;
+import com.springLesson.WebSpringLesson.services.MenuService;
 import com.springLesson.WebSpringLesson.services.OrderService;
 import com.springLesson.WebSpringLesson.services.UserService;
+import com.springLesson.WebSpringLesson.services.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -23,6 +28,8 @@ public class AdminController {
 
     public final UserService userService;
     public final OrderService orderService;
+    public final WarehouseService warehouseService;
+    public final MenuService menuService;
 
     @GetMapping("/admin/users")
     public String adminUser(Model model) {
@@ -36,6 +43,31 @@ public class AdminController {
         return "orderManagement";
     }
 
+    @GetMapping("/admin/warehouse")
+    public String warehouse(Model model) {
+        model.addAttribute("warehouses", warehouseService.findAllWarehouse());
+        return "warehouse";
+    }
+
+
+    @GetMapping("/admin/warehouse/add")
+    public String warehouseAdd(Model model) {
+        List<Menu> menus = menuService.findAllMenu();
+        model.addAttribute("menus", menus);
+        return "warehouseAdd";
+    }
+
+    @PostMapping("/admin/warehouse/add")
+    public String menuPostAdd(@ModelAttribute WarehouseRequest warehouseRequest) {
+        try {
+            warehouseService.warehouseAdd(warehouseRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/menu?error=true";
+        }
+        return "redirect:/admin/warehouse";
+    }
+
     @GetMapping("/admin")
     public String adminPanel() {
         return "adminPanel";
@@ -45,6 +77,13 @@ public class AdminController {
     public String userBan(@PathVariable(value = "numberPhone") Long numberPhone) {
         userService.banUser(numberPhone);
         return "redirect:/admin/users";
+    }
+
+    @GetMapping("/admin/warehouse/{warehouseId}")
+    public String getWarehouseId(@PathVariable(value = "warehouseId")
+                                Long warehouseId, Model model) {
+        model.addAttribute("warehouses", warehouseService.findAllByWarehouseId(warehouseId));
+        return "warehouseId";
     }
 
     @GetMapping("/admin/users/edit/{numberPhone}")

@@ -60,3 +60,16 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 02-add-comment-order-table
+      author: Mattew
+      changes:
+        - addColumn:
+            tableName: order
+            schemaName: food
+            columns:
+              - column:
+                  name: comment
+                  type: varchar(255)
+                  constraints:
+                    nullable: true

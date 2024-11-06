@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-warehouse-table
+      author: Mattew
+      changes:
+        - createTable:
+            tableName: warehouse
+            schemaName: food
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: food_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: count
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: delivery_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 03-add-id-warehouse-table
+      author: Mattew
+      changes:
+        - dropColumn:
+            tableName: order
+            schemaName: food
+            columnName: warehouse_id
+        - addColumn:
+            tableName: warehouse
+            schemaName: food
+            columns:
+              - column:
+                  name: warehouse_id
+                  type: bigint
+                  constraints:
+                    nullable: false

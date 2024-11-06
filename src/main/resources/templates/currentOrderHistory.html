@@ -41,6 +41,7 @@
             <h5 th:text="${#temporals.format(order.dateOrder, 'dd MMMM yyyy HH:mm')}"></h5>
             <h4 th:text="Адрес" class="mt-4"></h4>
             <h6 th:text="${order.orderAddress}"></h6>
+            <h7 th:if="${order.comment} != null" th:text="'Комментарий: ' + ${order.comment}"></h7>
 
             <div class="mt-4">
                 <h4 th:text="Оплата"></h4>

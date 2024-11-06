@@ -2,8 +2,8 @@ package com.springLesson.WebSpringLesson.services;
 
 import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.Menu;
-import com.springLesson.WebSpringLesson.repo.ContentOrderRepository;
-import com.springLesson.WebSpringLesson.repo.MenuRepository;
+import com.springLesson.WebSpringLesson.repository.ContentOrderRepository;
+import com.springLesson.WebSpringLesson.repository.MenuRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

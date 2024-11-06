@@ -57,6 +57,9 @@ public class Order {
     @NotNull
     private String orderAddress;
 
+    @Column(name = "comment")
+    private String comment;
+
     @PrePersist
     private void init() {
         this.dateOrder = LocalDateTime.now();

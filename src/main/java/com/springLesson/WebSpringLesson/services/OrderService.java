@@ -3,9 +3,9 @@ package com.springLesson.WebSpringLesson.services;
 import com.springLesson.WebSpringLesson.models.ContentOrder;
 import com.springLesson.WebSpringLesson.models.Menu;
 import com.springLesson.WebSpringLesson.models.Order;
-import com.springLesson.WebSpringLesson.repo.ContentOrderRepository;
-import com.springLesson.WebSpringLesson.repo.MenuRepository;
-import com.springLesson.WebSpringLesson.repo.OrderRepository;
+import com.springLesson.WebSpringLesson.repository.ContentOrderRepository;
+import com.springLesson.WebSpringLesson.repository.MenuRepository;
+import com.springLesson.WebSpringLesson.repository.OrderRepository;
 import com.springLesson.WebSpringLesson.request.OrderPayRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +84,7 @@ public class OrderService {
         order.setCostDelivery(orderPayRequest.getCostDelivery());
         order.setPaymentMethod(orderPayRequest.getPaymentMethod());
         order.setOrderAddress(orderPayRequest.getOrderAddress());
+        order.setComment(orderPayRequest.getComment());
 
         Set<ContentOrder> contentOrders = contentOrderRepository.findAllByUserIdAndOrderIdIsNull(orderPayRequest.getUserId());
         order.setContentOrders(contentOrders);

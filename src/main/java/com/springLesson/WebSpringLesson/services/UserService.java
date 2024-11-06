@@ -2,7 +2,7 @@ package com.springLesson.WebSpringLesson.services;
 
 import com.springLesson.WebSpringLesson.models.User;
 import com.springLesson.WebSpringLesson.models.enums.Role;
-import com.springLesson.WebSpringLesson.repo.UserRepository;
+import com.springLesson.WebSpringLesson.repository.UserRepository;
 import com.springLesson.WebSpringLesson.request.UserEditRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

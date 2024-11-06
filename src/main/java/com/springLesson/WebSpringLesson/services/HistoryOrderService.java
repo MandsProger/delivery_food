@@ -1,7 +1,7 @@
 package com.springLesson.WebSpringLesson.services;
 
 import com.springLesson.WebSpringLesson.models.Order;
-import com.springLesson.WebSpringLesson.repo.OrderRepository;
+import com.springLesson.WebSpringLesson.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
