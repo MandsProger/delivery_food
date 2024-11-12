@@ -1,0 +1,43 @@
+package com.deliveryFood.request;
+
+import com.deliveryFood.models.ContentOrder;
+import com.deliveryFood.models.enums.PaymentMethod;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Setter
+@Getter
+public class OrderPayRequest {
+
+    @NotNull
+    private Long id;
+
+    @NotNull
+    private Long userId;
+
+    private Set<ContentOrder> contentOrders = new HashSet<>();
+
+    @NotNull
+    private float resultPrice;
+
+    private PaymentMethod paymentMethod;
+
+    @NotNull
+    private boolean isPaid;
+
+    private LocalDateTime orderCompletionTime;
+
+    private float costDelivery;
+
+    private String feedback;
+
+    @NotNull
+    private String orderAddress;
+    private AddressRequest address;
+
+    private String comment;
+}
