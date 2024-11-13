@@ -86,4 +86,14 @@ public class UserService {
             saveUser(user);
         }
     }
+
+    public boolean authenticateTelegramBot(String email, String password) {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            if (user.getEmail().equals(email) && passwordEncoder.matches(password, user.getPassword())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
