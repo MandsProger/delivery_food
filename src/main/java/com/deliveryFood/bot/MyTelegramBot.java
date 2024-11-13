@@ -7,9 +7,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Component
 public class MyTelegramBot extends TelegramLongPollingBot {
 
@@ -22,14 +19,10 @@ public class MyTelegramBot extends TelegramLongPollingBot {
     private final TelegramBotService telegramBotService;
     private final TelegramCommandService telegramCommandService;
 
-    // Хранилище для отслеживания состояния ввода
-    private final Map<Long, String> waitingForInput = new HashMap<>();
-
     public MyTelegramBot(TelegramBotService telegramBotService, TelegramCommandService telegramCommandService) {
         this.telegramBotService = telegramBotService;
         this.telegramCommandService = telegramCommandService;
     }
-
 
     @Override
     public String getBotUsername() {
@@ -44,13 +37,12 @@ public class MyTelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
-            // Обрабатываем нажатие на кнопку
             String command = update.getCallbackQuery().getData();
             long chatId = update.getCallbackQuery().getMessage().getChatId();
             String userName = update.getCallbackQuery().getFrom().getFirstName();
 
             String response = telegramCommandService.processCommand(command, userName, chatId, null, null);
-            telegramBotService.sendTelegramMessage(chatId, response, this);
+            telegramBotService.sendTelegramMessage(chatId, response, true);
 
         } else if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
@@ -58,7 +50,7 @@ public class MyTelegramBot extends TelegramLongPollingBot {
             String userName = update.getMessage().getFrom().getFirstName();
 
             String response = telegramCommandService.processCommand(messageText, userName, chatId, null, null);
-            telegramBotService.sendTelegramMessage(chatId, response, this);
+            telegramBotService.sendTelegramMessage(chatId, response, true);
         }
     }
 }

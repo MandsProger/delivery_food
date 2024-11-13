@@ -10,8 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -34,8 +34,8 @@ public class UserService {
     public User getUserByNumberPhone(Long numberPhone){return userRepository.findByNumberPhone(numberPhone);}
 
     @Transactional
-    public void delete(Long foodID) {
-        userRepository.deleteById(foodID);
+    public void delete(Long userId) {
+        userRepository.deleteById(userId);
     }
 
     @Transactional
@@ -45,7 +45,7 @@ public class UserService {
             if (user.isActive()) {
                 user.setActive(false);
                 log.info("Ban user with id = {}", user.getNumberPhone());
-            } else  {
+            } else {
                 user.setActive(true);
                 log.info("UnBan user with id = {}", user.getNumberPhone());
             }
@@ -95,5 +95,12 @@ public class UserService {
             }
         }
         return false;
+    }
+
+    public List<User> getUsersByRole(Role role) {
+        List<User> allUsers = userRepository.findAll();
+        return allUsers.stream()
+                .filter(user -> user.getRoles().contains(role))
+                .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,7 @@ package com.deliveryFood.services;
 
 import com.deliveryFood.models.TelegramBotRequest;
 import com.deliveryFood.models.User;
+import com.deliveryFood.models.enums.Role;
 import com.deliveryFood.repository.TelegramBotRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,13 +15,25 @@ import java.util.List;
 public class TelegramBotRequestService {
 
     private final TelegramBotRequestRepository telegramBotRequestRepository;
+    private final TelegramBotService telegramBotService;
+    private final UserService userService;
 
     @Transactional
     public TelegramBotRequest createRequest(User user, String message) {
         TelegramBotRequest request = new TelegramBotRequest();
         request.setUserId(user.getNumberPhone());
         request.setMessage(message);
-        return telegramBotRequestRepository.save(request);
+
+        // Сохранить обращение
+        TelegramBotRequest savedRequest = telegramBotRequestRepository.save(request);
+
+        // Здесь предполагается, что менеджеры, которые будут уведомлены, определяются динамически
+        List<User> managers = userService.getUsersByRole(Role.ROLE_ADMIN); // Получить всех менеджеров
+        for (User manager : managers) {
+            telegramBotService.sendTelegramBotRequestListToManager(manager.getNumberPhone(), List.of(savedRequest));
+        }
+
+        return savedRequest;
     }
 
     public List<TelegramBotRequest> getRequestsByUser(User user) {
