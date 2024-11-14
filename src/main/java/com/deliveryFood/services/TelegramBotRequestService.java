@@ -24,13 +24,11 @@ public class TelegramBotRequestService {
         request.setUserId(user.getNumberPhone());
         request.setMessage(message);
 
-        // Сохранить обращение
         TelegramBotRequest savedRequest = telegramBotRequestRepository.save(request);
 
-        // Здесь предполагается, что менеджеры, которые будут уведомлены, определяются динамически
-        List<User> managers = userService.getUsersByRole(Role.ROLE_ADMIN); // Получить всех менеджеров
+        List<User> managers = userService.getUsersByRole(Role.ROLE_ADMIN);
         for (User manager : managers) {
-            telegramBotService.sendTelegramBotRequestListToManager(manager.getNumberPhone(), List.of(savedRequest));
+            telegramBotService.sendTelegramBotRequestListToManager(manager.getNumberPhone(), List.of(savedRequest), manager);
         }
 
         return savedRequest;

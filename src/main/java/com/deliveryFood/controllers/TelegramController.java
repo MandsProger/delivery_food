@@ -1,6 +1,6 @@
 package com.deliveryFood.controllers;
 
-import com.deliveryFood.services.TelegramBotService;
+
 import com.deliveryFood.services.TelegramCommandService;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,41 +8,52 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/telegram")
 public class TelegramController {
 
-    private final TelegramBotService telegramBotService;
     private final TelegramCommandService telegramCommandService;
 
-    public TelegramController(TelegramBotService telegramBotService, TelegramCommandService telegramCommandService) {
-        this.telegramBotService = telegramBotService;
+    public TelegramController(TelegramCommandService telegramCommandService) {
         this.telegramCommandService = telegramCommandService;
     }
 
-    @PostMapping("/start")
-    public void handleStart(@RequestParam String chatId) {
-        long chatIdLong = Long.parseLong(chatId);
-        String response = telegramCommandService.processCommand("/start", "Пользователь", chatIdLong, null, null);
-        telegramBotService.sendTelegramMessage(chatIdLong, response, false); // Если вам не нужны кнопки
+    @PostMapping("/send-command")
+    public String sendCommand(@RequestBody CommandRequest commandRequest) {
+        // Здесь вы можете передать команду боту и получить ответ
+        return telegramCommandService.processCommand(
+                commandRequest.getCommand(),
+                commandRequest.getUserName(),
+                commandRequest.getChatId(),
+                null, // email
+                null  // password
+        );
+    }
+}
+
+
+class CommandRequest {
+    private String command;
+    private String userName;
+    private Long chatId;
+
+    public String getCommand() {
+        return command;
     }
 
-    @PostMapping("/help")
-    public void handleHelp(@RequestParam String chatId) {
-        long chatIdLong = Long.parseLong(chatId);
-        String response = telegramCommandService.processCommand("/help", "Пользователь", chatIdLong, null, null);
-        telegramBotService.sendTelegramMessage(chatIdLong, response, false); // Если вам не нужны кнопки
+    public void setCommand(String command) {
+        this.command = command;
     }
 
-    @PostMapping("/login")
-    public void handleLogin(@RequestParam String chatId, @RequestParam(required = false) String email, @RequestParam(required = false) String password) {
-        long chatIdLong = Long.parseLong(chatId);
-        String response;
+    public String getUserName() {
+        return userName;
+    }
 
-        if (email == null) {
-            // Если email не передан, значит, мы ожидаем его ввода
-            response = telegramCommandService.processCommand("/login", "Пользователь", chatIdLong, null, null);
-        } else {
-            // В этом случае вводится пароль, который был получен ранее
-            response = telegramCommandService.processCommand("", "Пользователь", chatIdLong, email, password);
-        }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-        telegramBotService.sendTelegramMessage(chatIdLong, response, false); // Если вам не нужны кнопки
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 }
