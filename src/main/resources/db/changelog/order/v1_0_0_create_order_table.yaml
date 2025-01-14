@@ -73,3 +73,16 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: true
+  - changeSet:
+      id: 03-add-discount-order-table
+      author: Mattew
+      changes:
+        - addColumn:
+            tableName: order
+            schemaName: food
+            columns:
+              - column:
+                  name: discount
+                  type: int
+                  constraints:
+                    nullable: true

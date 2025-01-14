@@ -65,7 +65,7 @@ public class OrderController {
 
     @PostMapping("/order/pay")
     public String orderPay(@ModelAttribute OrderPayRequest payRequest,
-                           @ModelAttribute AddressRequest addressRequest, RedirectAttributes redirectAttributes)  {
+                           @ModelAttribute AddressRequest addressRequest, RedirectAttributes redirectAttributes) {
         String orderAddress = String.format("%s, дом: %s, Кв/офис: %s, Домофон: %s, Подъезд: %s, Этаж: %s",
                 addressRequest.getStreet(),
                 addressRequest.getHouse(),

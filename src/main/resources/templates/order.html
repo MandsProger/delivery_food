@@ -34,12 +34,28 @@
                        style="width: 100px; height: 38px; margin-left: 10px;" required>
             </div>
             <div class="form-row mb-2 d-flex">
-                <input type="text" name="apartment" placeholder="кв./дом" class="form-control" required>
-                <input type="text" name="intercom" placeholder="домофон" class="form-control">
-                <input type="text" name="porch" placeholder="подъезд" class="form-control">
-                <input type="text" name="floor" placeholder="этаж" class="form-control" required>
+                <div class="form-floating form-row">
+                    <input type="text" class="form-control" name="apartment" id="floatingInput" placeholder="кв./дом"
+                           required>
+                    <label for="floatingInput">кв./дом</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="intercom" id="floatingInput1" placeholder="домофон"
+                           required>
+                    <label for="floatingInput1">домофон</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="porch" id="floatingInput2" placeholder="подъезд"
+                           required>
+                    <label for="floatingInput2">подъезд</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="floor" id="floatingInput3" placeholder="этаж"
+                           required>
+                    <label for="floatingInput3">этаж</label>
+                </div>
             </div>
-            <div class="form-row mb-4">
+            <div class="form-row">
                 <input type="text" name="comment" placeholder="Комментарий к заказу" class="form-control">
             </div>
         </div>
@@ -49,7 +65,7 @@
             <h5 th:text="'Будет примерно в ' + ${#temporals.format(currentTime, 'HH:mm')}"></h5>
         </div>
 
-        <div class="contentOrder" style="width: 770px; margin-top: 620px; margin-left: -1020px;">
+        <div class="contentOrder" style="width: 770px; margin-top: 640px; margin-left: -1027px;">
             <h4 class="mb-3">Ваш заказ</h4>
             <ul class="list-group">
                 <li th:each="item : ${cartItems}" class="list-group-item d-flex align-items-center mb-3">
@@ -94,28 +110,70 @@
                 </select><br>
                 <h4>Цена</h4>
                 <h5 style="display: flex; justify-content: space-between;">
-                    <span th:text="'Товары в заказе'"></span>
-                    <span th:text="${sum} + ' руб.'"></span>
+                    <span>Товары в заказе</span>
+                    <span id="sumPrice" th:text="${sum} + ' руб.'"></span>
                 </h5>
                 <h5 style="display: flex; justify-content: space-between;">
-                    <span th:text="'Доставка'"></span>
-                    <span th:text="'149.0 руб.'"></span>
+                    <span>Доставка</span>
+                    <span>149.0 руб.</span>
                 </h5>
+                <h6 style="display: flex; justify-content: space-between; margin-top: 15px;">
+                    <span>Можно списать <span th:text="${user.bonus}"></span> бонусов</span>
+                    <input type="hidden" id="userBonus" th:value="${user.bonus}">
+                    <input id="discount" name="discount" th:value="0">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+                        <label class="form-check-label" for="flexSwitchCheckChecked">Списать</label>
+                    </div>
+                </h6>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <input type="hidden" name="_csrf" value="${_csrf.token}">
                     <button type="submit" class="btn btn-success mt-3" style="width: 60%;">Оплатить</button>
-                    <input type="hidden" name="resultPrice" th:value="${sum + 149}">
+                    <input type="hidden" name="resultPrice" id="resultPrice" value="${sum + 149}">
                     <input type="hidden" name="userId" th:value="${user.getNumberPhone()}">
-                    <input type="hidden" name="costDelivery" th:value="149">
-                    <h3 style="margin-top: 20px;" name="feedback" th:text="${sum + 149} + ' руб.'"></h3>
+                    <input type="hidden" name="costDelivery" value="149">
+                    <h3 id="totalPrice" style="margin-top: 20px;" th:text="${sum + 149} + ' руб.'"></h3>
                 </div>
             </form>
         </div>
     </div>
 </main>
-<div th:insert="~{blocks/footer :: footer}"></div>
-
 <script>
+
+document.addEventListener("DOMContentLoaded", () => {
+    const deliveryPrice = 149;
+    const bonus = parseInt(document.getElementById('userBonus').value, 10) || 0; // Получаем количество бонусов из скрытого поля
+    const sumElement = document.getElementById('sumPrice');
+    const finalPriceElement = document.getElementById('resultPrice');
+    const totalPriceElement = document.getElementById('totalPrice');
+    const discountElement = document.getElementById('discount');
+
+    const updatePrice = () => {
+        const useBonus = document.getElementById('flexSwitchCheckChecked').checked;
+        const sumText = sumElement.innerText.replace(/\s|руб\./g, '');
+        const orderedSum = parseInt(sumText, 10) || 0;
+
+        // Максимум, который можно списать бонусами
+        const maxBonusToUse = Math.floor(orderedSum * 0.3);
+
+        // Сумма, которую можно использовать из бонусов
+        const discountAmount = useBonus ? Math.min(bonus, maxBonusToUse) : 0;
+        const reducedPrice = orderedSum + deliveryPrice - discountAmount; // Уменьшаем итоговую цену
+
+        discountElement.value = discountAmount; // Отображаем скидку
+        finalPriceElement.value = reducedPrice; // Обновляем значение в скрытом поле
+        totalPriceElement.innerText = reducedPrice + ' руб.'; // Обновляем отображение итоговой цены
+    };
+
+    const checkbox = document.getElementById('flexSwitchCheckChecked');
+
+    // Обработчик события изменения состояния чекбокса
+    checkbox.addEventListener('change', updatePrice);
+
+    // Инициализация отображения цен при загрузке страницы
+    updatePrice();
+});
+
     document.addEventListener("DOMContentLoaded", () => {
         let map;
 

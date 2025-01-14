@@ -39,5 +39,7 @@ public class OrderPayRequest {
     private String orderAddress;
     private AddressRequest address;
 
+    private int discount;
+
     private String comment;
 }

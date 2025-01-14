@@ -60,6 +60,9 @@ public class Order {
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "discount")
+    private int discount;
+
     @PrePersist
     private void init() {
         this.dateOrder = LocalDateTime.now();
