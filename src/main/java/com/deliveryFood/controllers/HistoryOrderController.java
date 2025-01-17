@@ -73,6 +73,9 @@ public class HistoryOrderController {
             menusMap.put(menu.getName(), menu);
         }
 
+        double totalPrice = items.stream().mapToDouble(ContentOrder::getPrice).sum();
+        model.addAttribute("totalPrice", totalPrice);
+
         if (!items.isEmpty() && orderOptional.isPresent()) {
             Order order = orderOptional.get();
             model.addAttribute("items", items);

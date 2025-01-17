@@ -96,7 +96,12 @@ public class OrderService {
         order.setDiscount(orderPayRequest.getDiscount());
 
         User user = userRepository.findByNumberPhone(order.getUserId());
-        user.setBonus(user.getBonus() - orderPayRequest.getDiscount());
+        if (orderPayRequest.getDiscount() <= user.getBonus()) {
+            user.setBonus(user.getBonus() - orderPayRequest.getDiscount());
+        } else {
+            throw new IllegalArgumentException("Бонусов не хватает. У вас " + user.getBonus() + " бонусов");
+        }
+
 
         Set<ContentOrder> contentOrders = contentOrderRepository.findAllByUserIdAndOrderIdIsNull(orderPayRequest.getUserId());
         order.setContentOrders(contentOrders);

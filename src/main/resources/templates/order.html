@@ -108,31 +108,36 @@
                     <option value="CARD">Картой курьеру</option>
                     <option value="CASH">Наличные</option>
                 </select><br>
-                <h4>Цена</h4>
+                <h4>Цена:</h4>
                 <h5 style="display: flex; justify-content: space-between;">
                     <span>Товары в заказе</span>
                     <span id="sumPrice" th:text="${sum} + ' руб.'"></span>
                 </h5>
                 <h5 style="display: flex; justify-content: space-between;">
                     <span>Доставка</span>
-                    <span>149.0 руб.</span>
+                    <span id="deliveryPrice" th:text="${sum > 1200 ? '0.0 руб.' : '149.0 руб.'}"></span>
                 </h5>
                 <h6 style="display: flex; justify-content: space-between; margin-top: 15px;">
-                    <span>Можно списать <span th:text="${user.bonus}"></span> бонусов</span>
+                    <span>У вас <span th:text="${user.bonus}" id="userBonusMain"></span> бонусов</span>
                     <input type="hidden" id="userBonus" th:value="${user.bonus}">
-                    <input id="discount" name="discount" th:value="0">
+                    <input type="hidden" id="discount" name="discount" th:value="0">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
                         <label class="form-check-label" for="flexSwitchCheckChecked">Списать</label>
                     </div>
                 </h6>
+                <h6 style="display: flex; justify-content: space-between;" class="discount">
+                    <span>Сумма скидки</span>
+                    <span id="discountAmount" style="color:green;">0 руб.</span>
+                </h6>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <input type="hidden" name="_csrf" value="${_csrf.token}">
                     <button type="submit" class="btn btn-success mt-3" style="width: 60%;">Оплатить</button>
-                    <input type="hidden" name="resultPrice" id="resultPrice" value="${sum + 149}">
+                    <input type="hidden" name="resultPrice" id="resultPrice"
+                           value="${sum + (sum > 1200 ? 0.0 : 149.0)}">
                     <input type="hidden" name="userId" th:value="${user.getNumberPhone()}">
-                    <input type="hidden" name="costDelivery" value="149">
-                    <h3 id="totalPrice" style="margin-top: 20px;" th:text="${sum + 149} + ' руб.'"></h3>
+                    <input type="hidden" name="costDelivery" id="costDelivery" th:value="${sum > 1200 ? 0.0 : 149.0}">
+                    <h3 id="totalPrice" style="margin-top: 20px;"></h3>
                 </div>
             </form>
         </div>
@@ -141,28 +146,34 @@
 <script>
 
 document.addEventListener("DOMContentLoaded", () => {
-    const deliveryPrice = 149;
     const bonus = parseInt(document.getElementById('userBonus').value, 10) || 0; // Получаем количество бонусов из скрытого поля
     const sumElement = document.getElementById('sumPrice');
     const finalPriceElement = document.getElementById('resultPrice');
     const totalPriceElement = document.getElementById('totalPrice');
     const discountElement = document.getElementById('discount');
+    const userBonusMainElement = document.getElementById('userBonusMain');
+    const discountAmountElement = document.getElementById('discountAmount');
 
     const updatePrice = () => {
         const useBonus = document.getElementById('flexSwitchCheckChecked').checked;
         const sumText = sumElement.innerText.replace(/\s|руб\./g, '');
-        const orderedSum = parseInt(sumText, 10) || 0;
+        const orderedSum = parseFloat(sumText) || 0; // Преобразуем в число
 
-        // Максимум, который можно списать бонусами
+        // Определение стоимости доставки
+        const deliveryPriceValue = orderedSum > 1200 ? 0 : 149;
         const maxBonusToUse = Math.floor(orderedSum * 0.3);
 
         // Сумма, которую можно использовать из бонусов
         const discountAmount = useBonus ? Math.min(bonus, maxBonusToUse) : 0;
-        const reducedPrice = orderedSum + deliveryPrice - discountAmount; // Уменьшаем итоговую цену
+        const reducedPrice = orderedSum + deliveryPriceValue - discountAmount; // Уменьшаем итоговую цену
 
         discountElement.value = discountAmount; // Отображаем скидку
         finalPriceElement.value = reducedPrice; // Обновляем значение в скрытом поле
         totalPriceElement.innerText = reducedPrice + ' руб.'; // Обновляем отображение итоговой цены
+        discountAmountElement.innerText = discountAmount + ' руб.'; // Обновляем отображение суммы скидки
+
+        // Обновляем количество доступных бонусов
+        userBonusMainElement.textContent = bonus - discountAmount;
     };
 
     const checkbox = document.getElementById('flexSwitchCheckChecked');
@@ -295,6 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.removeItem('scrollPos'); // Удаляем позицию после использования
         }
     };
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 </body>

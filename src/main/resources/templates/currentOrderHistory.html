@@ -27,10 +27,13 @@
                             </div>
                         </div>
                         <div style="flex-grow: 1;">
-                            <h4 th:text="${item.foodName}" style="margin: 0;"></h4>
+                            <h4 th:text="${item.foodName}" class="mb-1" style="margin: 0;"></h4>
                             <h5 th:text="${item.count} + ' шт.'" style="margin: 0;"></h5>
                         </div>
-                        <h4 th:text="${item.price} + ' руб.'" class="ms-3"></h4>
+                        <div style="flex-grow: 0.1;">
+                            <h4 th:text="${item.price} + ' руб.'" class="mb-1" style="margin: 0;"></h4>
+                            <h6 th:text="${item.price / item.count} + '/шт'" style="margin: 0;"></h6>
+                        </div>
                     </div>
                 </li>
             </ul>
@@ -46,12 +49,16 @@
             <div class="mt-4">
                 <h4 th:text="Оплата"></h4>
                 <div class="d-flex justify-content-between">
-                    <h6 th:text="'Сумма товаров '"></h6>
-                    <h6 th:text="${order.resultPrice - order.costDelivery} + ' руб.'"></h6>
+                    <h5 th:text="'Сумма товаров '"></h5>
+                    <h5 th:text="${totalPrice}  + ' руб.'"></h5>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <h6 th:text="'Сумма доставки '"></h6>
-                    <h6 th:text="${order.costDelivery} + ' руб.'"></h6>
+                    <h5 th:text="'Сумма доставки '"></h5>
+                    <h5 th:text="${order.costDelivery} + ' руб.'"></h5>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <h6>Сумма скидки</h6>
+                    <h6 style="color:green;" th:text="${order.discount} + ' руб.'"></h6>
                 </div>
                 <div class="d-flex justify-content-between mt-2">
                     <h4 th:text="'Общая сумма '"></h4>
