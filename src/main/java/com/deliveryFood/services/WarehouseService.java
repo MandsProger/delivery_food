@@ -71,7 +71,6 @@ public class WarehouseService {
 
     private Long generateUniqueWarehouseId() {
         Long warehouseId;
-
         do {
             // Генерируем уникальный идентификатор, можно использовать более сложные стратегии по мере необходимости
             warehouseId = System.currentTimeMillis() + new Random().nextInt(1000);

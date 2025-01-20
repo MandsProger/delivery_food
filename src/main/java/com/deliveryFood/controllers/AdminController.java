@@ -90,12 +90,10 @@ public class AdminController {
     public String userEdit(@PathVariable(value = "numberPhone")
                                        Long numberPhone, Model model){
         User user = userService.getUserByNumberPhone(numberPhone);
-        ArrayList<User> users = new ArrayList<>();
-        if (user != null) {
-            users.add(user);
-        } else return "redirect:/admin/user";
-
-        model.addAttribute("users", users);
+        if (user == null) {
+            return "redirect:/admin/users";
+        }
+        model.addAttribute("user", user);
         model.addAttribute("roles", user.getRoles().stream()
                 .map(Role::getAuthority)
                 .collect(Collectors.toSet()));

@@ -10,7 +10,7 @@
 <main>
     <div class="container mt-5 mb-5">
         <h1 th:text="'Редактирование юзера '+ ${numberPhone}"/><br>
-        <div th:each="user : ${users}">
+        <div>
             <form method="post">
                 <input type="text" th:value="${user.name}" name="name" placeholder="Редактировать имя" class="form-control" required><br>
                 <input type="email" th:value="${user.email}" name="email" placeholder="Редактировать email" class="form-control" required><br>
