@@ -60,33 +60,37 @@
         </div>
 
         <div class="row">
-            <div th:each="el, stat : ${menus}" class="text-center mb-4" th:if="${el.remainder} > 0"
-                 style="border: 1px solid #dee2e6; border-radius: 0.25rem; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-right:30px; width: 31%;">
-                <img th:src="@{/uploads/{imagePath}(imagePath=${el.imagePath})}"
-                     th:alt="${'Изображение ' + el.name}" class="img-fluid mb-3"
-                     style="width: 220px; height: 220px; object-fit: cover;"/>
-                <h3 th:text="${el.name}"></h3>
-                <!--<p th:text="${el.description}"></p>-->
-                <div th:each="co : ${contentOrders}" th:if="${co.foodName == el.name}">
-                    <p th:text="'Осталось ' + ${el.remainder - co.count}"></p>
+            <div th:each="el, stat : ${menus}" class="col-md-3 text-center mb-4" th:if="${el.remainder} > 0">
+                <div class="card" style="border: 1px solid #212529; border-radius: 0.25rem; height: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); background-color: #2b3035;">
+                    <img th:src="@{/uploads/{imagePath}(imagePath=${el.imagePath})}"
+                         th:alt="${'Изображение ' + el.name}" class="card-img-top"
+                         style="width: 100%; height: 220px; object-fit: cover;"/>
+
+                    <div class="card-body">
+                        <h4 th:text="${el.name}" class="card-title text-white"></h4>
+                        <h5 th:text="${el.price} + ' руб.'" class="card-text text-white"></h5>
+
+                        <div th:each="co : ${contentOrders}" th:if="${co.foodName == el.name}">
+                            <p class="text-white" th:text="'Осталось ' + ${el.remainder - co.count}"></p>
+                        </div>
+
+                        <form th:action="'/menu/' + ${el.foodId} + '/buy'" method="post" class="d-flex align-items-center justify-content-center mt-3">
+                            <div class="input-group" style="width: 130px;">
+                                <button type="button" class="btn btn-outline-secondary decrement-btn">-</button>
+                                <input type="number" name="count" value="1"
+                                       min="1" th:max="${el.remainder}" class="form-control text-center"
+                                       style="appearance: none; -moz-appearance: textfield;" readonly
+                                       onkeydown="return false;"/>
+                                <button type="button" class="btn btn-outline-secondary increment-btn">+</button>
+                            </div>
+                            <input type="hidden" name="action" value="buy"/>
+                            <div>
+                                <button type="submit" class="btn btn-primary ms-2">Купить</button>
+                            </div>
+                        </form>
+                        <a th:href="'/menu/' + ${el.foodId}" class="btn btn-warning mt-2">Подробнее</a>
+                    </div>
                 </div>
-                <h4 th:text="${el.price} + ' руб.'"></h4>
-                <form th:action="'/menu/' + ${el.foodId} + '/buy'" method="post"
-                      class="d-flex mt-2 mb-4 justify-content-center">
-                    <div class="input-group" style="width:130px">
-                        <button type="button" class="btn btn-outline-secondary decrement-btn">-</button>
-                        <input type="number" name="count" value="1"
-                               min="1" th:max="${el.remainder}" class="form-control text-center"
-                               style="appearance: none; -moz-appearance: textfield;" readonly
-                               onkeydown="return false;"/>
-                        <button type="button" class="btn btn-outline-secondary increment-btn">+</button>
-                    </div>
-                    <input type="hidden" name="action" value="buy"/>
-                    <div >
-                        <button type="submit" class="btn btn-primary ms-2">Купить</button>
-                    </div>
-                </form>
-                <a th:href="'/menu/' + ${el.foodId}" class="btn btn-warning">Подробнее</a>
             </div>
         </div>
         <br>
