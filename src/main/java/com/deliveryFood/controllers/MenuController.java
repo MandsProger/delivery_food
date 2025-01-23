@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,15 +29,16 @@ public class MenuController {
 
     @GetMapping("/menu")
     public String menuMain(Model model) {
-        Iterable<Menu> menus = menuService.findAllMenu();
-        model.addAttribute("menus", menus);
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
+        // Получаем меню и корзину пользователя
+        Iterable<Menu> menus = menuService.findAllMenu();
+        model.addAttribute("menus", menus);
+
         Set<ContentOrder> contentOrders = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
         model.addAttribute("contentOrders", contentOrders);
-        return "menuMain";
+        return "menuMain"; // возвращает страницу меню
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -91,23 +93,20 @@ public class MenuController {
 
     @PostMapping("/menu/{foodId}/buy")
     public String menuBuy(@PathVariable(value = "foodId") Long foodId,
-                          @RequestParam(value = "count", defaultValue = "1") int count, Model model) {
+                          @RequestParam(value = "count", defaultValue = "1") int count,
+                          RedirectAttributes redirectAttributes) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
         try {
             contentOrderService.addProductToCart(foodId, count, user.getNumberPhone());
-            return "redirect:/menu";
+            redirectAttributes.addFlashAttribute("successMessage", "Блюдо успешно добавлено в корзину!");
         } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
-        Iterable<Menu> menus = menuService.findAllMenu();
-        model.addAttribute("menus", menus);
 
-        Set<ContentOrder> contentOrders = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
-        model.addAttribute("contentOrders", contentOrders);
-        return "menuMain";
+        return "redirect:/menu"; // Перенаправляем на /menu
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

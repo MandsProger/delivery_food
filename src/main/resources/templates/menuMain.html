@@ -4,12 +4,61 @@
     <title>Меню ресторана</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        /* Стили для сообщений */
+        .notification {
+            position: fixed; /* Зафиксировать позицию */
+            top: 50px; /* Отступ сверху */
+            left: 50%; /* Позиционирование по горизонтали */
+            transform: translateX(-50%); /* Центрирование по горизонтали */
+            z-index: 1050; /* Поверх всего контента */
+            width: 30%;
+            text-align: center;
+            transition: opacity 0.5s ease; /* Плавное исчезновение */
+            opacity: 1; /* Начальная прозрачность */
+        }
+
+        .notification.hide {
+            opacity: 0; /* Прозрачность при скрытии */
+            pointer-events: none; /* Отключение событий при скрытии */
+        }
+
+        .notification .progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background-color: transparent;
+        }
+
+        .notification .progress-bar {
+            transition: width 3s linear;
+        }
+
+    </style>
 </head>
 <body>
 <header th:insert="~{blocks/header :: header}"></header>
 <main>
     <div class="container mt-5">
         <h1>Меню</h1><br><br>
+
+        <!-- Сообщение об успешной покупке -->
+        <div th:if="${successMessage}" class="alert alert-success notification" role="alert" id="success-message">
+            <span th:text="${successMessage}"></span>
+            <div class="progress" style="width: 100%;">
+                <div class="progress-bar bg-success" id="success-progress" style="width: 100%;"></div>
+            </div>
+        </div>
+
+        <!-- Сообщение об ошибке -->
+        <div th:if="${errorMessage}" class="alert alert-danger notification" role="alert" id="error-message">
+            <span th:text="${errorMessage}"></span>
+            <div class="progress" style="width: 100%;">
+                <div class="progress-bar bg-danger" id="error-progress" style="width: 100%;"></div>
+            </div>
+        </div>
+
         <div class="row">
             <div th:each="el, stat : ${menus}" class="text-center mb-4" th:if="${el.remainder} > 0"
                  style="border: 1px solid #dee2e6; border-radius: 0.25rem; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-right:30px; width: 31%;">
@@ -22,12 +71,14 @@
                     <p th:text="'Осталось ' + ${el.remainder - co.count}"></p>
                 </div>
                 <h4 th:text="${el.price} + ' руб.'"></h4>
-                <form th:action="'/menu/' + ${el.foodId} + '/buy'" method="post" class="d-flex mt-2 mb-4 justify-content-center">
+                <form th:action="'/menu/' + ${el.foodId} + '/buy'" method="post"
+                      class="d-flex mt-2 mb-4 justify-content-center">
                     <div class="input-group" style="width:130px">
                         <button type="button" class="btn btn-outline-secondary decrement-btn">-</button>
                         <input type="number" name="count" value="1"
                                min="1" th:max="${el.remainder}" class="form-control text-center"
-                               style="appearance: none; -moz-appearance: textfield;" readonly onkeydown="return false;" />
+                               style="appearance: none; -moz-appearance: textfield;" readonly
+                               onkeydown="return false;"/>
                         <button type="button" class="btn btn-outline-secondary increment-btn">+</button>
                     </div>
                     <input type="hidden" name="action" value="buy"/>
@@ -43,40 +94,91 @@
            href="/menu/add" class="btn btn-success">Добавить блюдо в меню
         </a>
         <br><br>
-        <span th:if="${errorMessage ne null}">
-            <div th:fragment="error" id="error" class="alert alert-danger" role="alert">
-                <span th:text="${errorMessage}"></span>
-            </div>
-        </span>
     </div>
 </main>
 <div th:insert="~{blocks/footer :: footer}"></div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const containers = document.querySelectorAll('.input-group');
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
 
-        containers.forEach(container => {
-            const input = container.querySelector('input[type="number"]');
-            const incrementButton = container.querySelector('.increment-btn');
-            const decrementButton = container.querySelector('.decrement-btn');
-            const maxRemainder = parseInt(input.getAttribute('max'), 10);
+    function hideMessage(messageElement) {
+        if (messageElement) {
+            const progressBar = messageElement.querySelector('.progress-bar');
+            // Сброс полосы прогресса
+            resetProgressBar(progressBar);
+            messageElement.classList.remove('hide'); // Убрать класс hide
+            setTimeout(() => {
+                messageElement.classList.add('hide'); // Добавить класс hide
+            }, 3000); // 3 секунды до начала скрытия
+            setTimeout(() => {
+                messageElement.remove(); // Удалить элемент
+            }, 3500); // через 3.5 секунды удалить
+        }
+    }
 
-            incrementButton.addEventListener('click', function () {
-                let currentValue = parseInt(input.value, 10);
-                if (currentValue < maxRemainder) {
-                    input.value = currentValue + 1;
-                }
-            });
+    function resetProgressBar(progressBar) {
+        // Плавное исчезновение полосы прогресса
+        progressBar.style.transition = 'none'; // Отключаем переход
+        progressBar.style.width = '100%'; // Устанавливаем ширину на 100%
 
-            decrementButton.addEventListener('click', function () {
-                let currentValue = parseInt(input.value, 10);
-                if (currentValue > 1) {
-                    input.value = currentValue - 1;
-                }
-            });
+        // Затем включаем переход и устанавливаем ширину на 0% через 10ms
+        setTimeout(() => {
+            progressBar.style.transition = 'width 3s linear'; // Включаем переход
+            progressBar.style.width = '0%'; // Скрываем полоску
+        }, 10);
+    }
+
+    if (successMessage) {
+        hideMessage(successMessage);
+    }
+
+    if (errorMessage) {
+        hideMessage(errorMessage);
+    }
+
+    // JavaScript код для инкремента и декремента
+    const containers = document.querySelectorAll('.input-group');
+
+    containers.forEach(container => {
+        const input = container.querySelector('input[type="number"]');
+        const incrementButton = container.querySelector('.increment-btn');
+        const decrementButton = container.querySelector('.decrement-btn');
+        const maxRemainder = parseInt(input.getAttribute('max'), 10);
+
+        incrementButton.addEventListener('click', function () {
+            let currentValue = parseInt(input.value, 10);
+            if (currentValue < maxRemainder) {
+                input.value = currentValue + 1;
+            }
+        });
+
+        decrementButton.addEventListener('click', function () {
+            let currentValue = parseInt(input.value, 10);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
         });
     });
+});
+
+    // Сохраняем позицию перед переходом
+    window.onbeforeunload = function() {
+        sessionStorage.setItem('scrollPos', window.scrollY);
+    };
+
+    // Восстанавливаем позицию после загрузки страницы
+    window.onload = function() {
+        const scrollPos = sessionStorage.getItem('scrollPos');
+        if (scrollPos) {
+            window.scrollTo(0, scrollPos);
+            sessionStorage.removeItem('scrollPos'); // Удаляем позицию после использования
+        }
+    };
+
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
 </body>
 </html>
