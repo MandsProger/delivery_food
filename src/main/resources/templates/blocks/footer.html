@@ -1,11 +1,32 @@
 <div th:fragment="footer" xmlns:th="http://www.w3.org/1999/xhtml">
-    <footer class="text-body-secondary py-5">
+    <footer class="bg-dark text-light py-2">
         <div class="container">
-            <p class="float-end mb-1">
-                <a href="#">Back to top</a>
+            <hr class="my-4" />
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Контакты</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Телефон:</strong> +7 (8342) 23-37-460</li>
+                        <li><strong>Email:</strong> support@fooddelivery.com</li>
+                        <li><strong>Адрес:</strong> просп. Ленина, 24, Саранск, Россия</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Полезные ссылки</h5>
+                    <ul class="list-unstyled">
+                        <li><a class="text-light" href="/">Главная</a></li>
+                        <li><a class="text-light" href="/menu">Меню</a></li>
+                        <li><a class="text-light" href="/about">О нас</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-3"/>
+            <p class="mb-0 text-center">
+                &copy;<span th:text="${#dates.format(new java.util.Date(), 'yyyy')}"></span> Food Delivery. Все права защищены.
             </p>
-            <p class="mb-1">Album example is © Bootstrap, but please download and customize it for yourself!</p>
-            <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="/docs/5.3/getting-started/introduction/">getting started guide</a>.</p>
+            <p class="text-center">
+                <a href="#" class="text-light">Вернуться вверх</a>
+            </p>
         </div>
     </footer>
 </div>
