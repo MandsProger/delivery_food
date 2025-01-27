@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,9 +37,16 @@ public class MenuController {
         Iterable<Menu> menus = menuService.findAllMenu();
         model.addAttribute("menus", menus);
 
+        // Собираем уникальные категории
+        Set<String> categories = new HashSet<>();
+        for (Menu menu : menus) {
+            categories.add(menu.getCategory());
+        }
+        model.addAttribute("categories", categories);
+
         Set<ContentOrder> contentOrders = contentOrderService.getAllUserCartByNumberPhone(user.getNumberPhone());
         model.addAttribute("contentOrders", contentOrders);
-        return "menuMain"; // возвращает страницу меню
+        return "menuMain";
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
