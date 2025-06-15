@@ -9,20 +9,29 @@
 <header th:insert="~{blocks/header :: header}"></header>
 <main>
     <div class="container mt-5">
-        <div th:each="el : ${menu}" class="alert, alert-info, mt-2">
-            <h2 th:text="${el.name}"/>
-            <p th:text="'Цена: ' + ${el.price} + ' руб.'"></p>
-            <h5 th:text="'Категория: ' + ${el.category}"></h5>
-            <h5     th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
-                    th:text="'Остаток на складе: ' + ${el.remainder}"></h5>
-            <h5 th:text="'Описание: ' + ${el.description}"></h5>
-            <h5 th:text="'Объем: ' + ${el.volume}"></h5>
-            <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-                <a th:href="'/menu/' + ${el.foodId} + '/edit'" class="btn btn-warning">Редактировать</a><br><br>
-                <form th:action="'/menu/' + ${el.foodId} + '/remove'" method="post">
-                    <input type="hidden" name="_csrf" value="${_csrf.token}">
-                    <button class="btn btn-warning" type="submit">Удалить</button>
-                </form>
+        <div class="row">
+            <div th:each="el : ${menu}" class="col-md-4 mb-4">
+                <div class="card">
+                    <img th:src="@{/uploads/{imagePath}(imagePath=${el.imagePath})}"
+                         th:alt="${'Изображение ' + el.name}" class="card-img-top"
+                         style="height: 220px; object-fit: cover;"/>
+                    <div class="card-body">
+                        <h5 th:text="${el.name}" class="card-title"></h5>
+                        <h6 th:text="'Цена: ' + ${el.price} + ' руб.'" class="card-subtitle mb-2 text-muted"></h6>
+                        <h6 th:text="'Категория: ' + ${el.category}" class="card-subtitle mb-2 text-muted"></h6>
+                        <h6 th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+                            th:text="'Остаток на складе: ' + ${el.remainder}" class="card-subtitle mb-2 text-danger"></h6>
+                        <p th:text="'Описание: ' + ${el.description}" class="card-text"></p>
+                        <p th:text="'Объем: ' + ${el.volume}" class="card-text"></p>
+                        <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="mt-3">
+                            <a th:href="'/menu/' + ${el.foodId} + '/edit'" class="btn btn-warning">Редактировать</a>
+                            <form th:action="'/menu/' + ${el.foodId} + '/remove'" method="post" class="d-inline-block">
+                                <input type="hidden" name="_csrf" value="${_csrf.token}">
+                                <button class="btn btn-danger" type="submit">Удалить</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

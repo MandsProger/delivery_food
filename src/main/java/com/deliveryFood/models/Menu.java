@@ -36,7 +36,7 @@ public class Menu {
     private String category;
 
     @Column(name = "description")
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я\s]{0,250}$")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я0-9.,;:!?\"'()ёЁ–— ]{0,500}$")
     private String description;
 
     @Column(name = "volume")

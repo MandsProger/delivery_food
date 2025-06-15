@@ -44,6 +44,16 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    private void orderUpdate(OrderPayRequest orderPayRequest, Order order) {
+        order.setResultPrice(orderPayRequest.getResultPrice());
+        order.setUserId(orderPayRequest.getUserId());
+        order.setCostDelivery(orderPayRequest.getCostDelivery());
+        order.setPaymentMethod(orderPayRequest.getPaymentMethod());
+        order.setOrderAddress(orderPayRequest.getOrderAddress());
+        order.setComment(orderPayRequest.getComment());
+        order.setDiscount(orderPayRequest.getDiscount());
+    }
+
     @Transactional
     public void delete(Long orderId) {
         Set<ContentOrder> contentOrders = contentOrderRepository.findAllByOrderId(orderId);
@@ -87,13 +97,8 @@ public class OrderService {
     @Transactional
     public void orderPay(OrderPayRequest orderPayRequest) {
         Order order = new Order();
-        order.setResultPrice(orderPayRequest.getResultPrice());
-        order.setUserId(orderPayRequest.getUserId());
-        order.setCostDelivery(orderPayRequest.getCostDelivery());
-        order.setPaymentMethod(orderPayRequest.getPaymentMethod());
-        order.setOrderAddress(orderPayRequest.getOrderAddress());
-        order.setComment(orderPayRequest.getComment());
-        order.setDiscount(orderPayRequest.getDiscount());
+
+        orderUpdate(orderPayRequest, order);
 
         User user = userRepository.findByNumberPhone(order.getUserId());
         if (orderPayRequest.getDiscount() <= user.getBonus()) {
@@ -101,7 +106,6 @@ public class OrderService {
         } else {
             throw new IllegalArgumentException("Бонусов не хватает. У вас " + user.getBonus() + " бонусов");
         }
-
 
         Set<ContentOrder> contentOrders = contentOrderRepository.findAllByUserIdAndOrderIdIsNull(orderPayRequest.getUserId());
         order.setContentOrders(contentOrders);

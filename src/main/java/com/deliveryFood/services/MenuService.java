@@ -49,6 +49,12 @@ public class MenuService {
 
     public boolean existsMenuById(Integer foodId) {return menuRepository.existsById(foodId);}
 
+    private String getAbsolutePath() {
+        String uploadDir = "uploads";
+        String absolutePath = new File("src/main/resources/static/" + uploadDir).getAbsolutePath();
+        return absolutePath;
+    }
+
     @Transactional
     public void menuEdit(Long foodId, MenuEditRequest menuEditRequest, MultipartFile image) throws IOException {
         Menu menu = findByMenuId(foodId);
@@ -74,10 +80,7 @@ public class MenuService {
 
     @Transactional
     private String saveImage(MultipartFile file) throws IOException {
-        String uploadDir = "uploads";
-        String absolutePath = new File("src/main/resources/static/" + uploadDir).getAbsolutePath();
-
-        File dir = new File(absolutePath);
+        File dir = new File(getAbsolutePath());
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -90,10 +93,7 @@ public class MenuService {
 
     @Transactional
     private void deleteImage(String imagePath) {
-        String uploadDir = "uploads";
-        String absolutePath = new File("src/main/resources/static/" + uploadDir).getAbsolutePath();
-
-        File fileToDelete = new File(absolutePath, imagePath);
+        File fileToDelete = new File(getAbsolutePath(), imagePath);
         if (fileToDelete.exists()) {
             boolean deleted = fileToDelete.delete();
             if (!deleted) {

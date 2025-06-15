@@ -98,31 +98,28 @@ document.addEventListener('DOMContentLoaded', function() {
             const selectedValue = productSelect.value;
             if (selectedValue) {
                 selectedProducts.delete(selectedValue); // Удаляем значение из набора выбранных
+                updateProductOptions(); // Обновляем доступные опции после удаления
             }
 
             productRow.remove(); // Удаляем строку
-            updateProductOptions(); // Обновляем доступные опции после удаления
-
-            // Добавляем обратно выбранный продукт
-            if (selectedValue) {
-                selectedProducts.delete(selectedValue);
-                // Добавляем опции обратно к оригинальным
-                originalOptions += `<option value="${selectedValue}">${selectedValue}</option>`;
-            }
-            // Обновляем доступные опции для всех селектов
-            updateProductOptions();
+            updateProductOptions(); // Обновляем доступные опции для всех селектов
         }
     });
 
     document.getElementById('productFields').addEventListener('change', function(event) {
         if (event.target.classList.contains('product-select')) {
             const selectedValue = event.target.value;
+            const previousValue = event.target.getAttribute('data-previous-value');
+
+            if (previousValue) {
+                selectedProducts.delete(previousValue); // Удаляем предыдущее выбранное значение
+            }
+
             if (selectedValue) {
                 selectedProducts.add(selectedValue); // Добавляем новое значение в набор выбранных
-                updateProductOptions();
-            } else {
-                selectedProducts.delete(event.target.value); // Удаляем значение, если выбор отменён
             }
+
+            event.target.setAttribute('data-previous-value', selectedValue); // Сохраняем текущее значение как предыдущее
             updateProductOptions();
         }
     });

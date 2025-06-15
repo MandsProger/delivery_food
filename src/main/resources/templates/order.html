@@ -80,6 +80,7 @@
                         <h4 th:text="${item.foodName}" style="margin: 0;" class="flex-grow-1"></h4>
                     </div>
                     <div class="d-flex align-items-center">
+                        <h4 th:text="${item.price} + ' руб.'" style="margin: 0;" class="me-3"></h4>
                         <div class="input-group me-2" style="width: 130px;">
                             <form th:action="'/order/' + ${item.id} + '/minus'" method="post" style="margin: 0;">
                                 <button type="submit" class="btn btn-outline-secondary decrement-btn">-</button>
@@ -91,7 +92,6 @@
                                 <button type="submit" class="btn btn-outline-secondary increment-btn">+</button>
                             </form>
                         </div>
-                        <h4 th:text="${item.price} + ' руб.'" style="margin: 0;" class="me-3"></h4>
                         <form th:action="'/order/' + ${item.id} + '/remove'" method="post">
                             <input type="hidden" name="_csrf" value="${_csrf.token}">
                             <button class="btn btn-outline-danger" type="submit">Удалить</button>
@@ -143,8 +143,8 @@
         </div>
     </div>
 </main>
+<div th:insert="~{blocks/footer :: footer}"></div>
 <script>
-
 document.addEventListener("DOMContentLoaded", () => {
     const bonus = parseInt(document.getElementById('userBonus').value, 10) || 0; // Получаем количество бонусов из скрытого поля
     const sumElement = document.getElementById('sumPrice');
@@ -306,7 +306,6 @@ document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.removeItem('scrollPos'); // Удаляем позицию после использования
         }
     };
-
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 </body>
