@@ -64,7 +64,7 @@ public class ContentOrderController {
     }
 
     @PostMapping("/contentOrder/{id}/plus")
-    public String contentOrderMinusPlus(@PathVariable(value = "id") Long id) {
+    public String contentOrderMinusPlusProduct(@PathVariable(value = "id") Long id) {
         contentOrderService.contentOrderPlus(id);
         return "redirect:/contentOrder";
     }
